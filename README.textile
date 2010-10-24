@@ -4,7 +4,7 @@ Sidekick is a command line tool to automatically trigger certain tasks following
 
 You would typically run it in the background while coding, to automatize things like restarting development servers on file changes, or recompiling assets. Other use cases could be continous testing, periodically running a command, etc.
 
-The main code is approx 100 lines of including documentation, excluding triggers and helpers.
+The main code is approx 100 lines of code including documentation, excluding triggers and helpers.
 
 
 h2. Basic usage
