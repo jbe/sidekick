@@ -31,7 +31,7 @@ The @watch@ and @every@ commands above are are triggers, while @notify@, @sh@, a
 
 h3. Currently available triggers:
 
-|@watch(glob)@|run on file changes matching @glob@. Globs like Dir[]. |
+|@watch(glob)@|run on file changes matching @glob@. Globs like @Dir[]@. |
 |@every(duration)@|run every @duration@ seconds|
 
 h3. Currently available helpers:
