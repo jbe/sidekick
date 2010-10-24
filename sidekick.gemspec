@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
      "lib/sidekick.rb",
      "lib/sidekick/helpers.rb",
      "lib/sidekick/triggers.rb",
+     "lib/sidekick/triggers/watch.rb",
      "sidekick.gemspec",
      "test/helper.rb",
      "test/test_sidekick.rb"

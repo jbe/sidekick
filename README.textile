@@ -2,72 +2,123 @@ h1. Sidekick [Draft]
 
 Sidekick is a command line tool to automatically trigger certain tasks following certain events, as defined in a @.sidekick@ file in your project folder.
 
-You would typically run it in the background while coding, to automatize things like restarting development servers on file changes, or recompiling assets. Other use cases could be continous testing, periodically running a command, etc.
+You would typically run it in the background while coding, to automatize things like restarting development servers on file changes, recompiling assets, continously running tests or periodically running commands.
 
-The main code is approx 100 lines including documentation, excluding triggers and helpers.
+It is very easy to set up and extend.
 
 
 h2. Basic usage
 
-After running @gem install sidekick@, invoke it using the @sidekick@ shell command. You should have a @.sidekick@ file in your project directory for this. A sample file:
+Install with @gem install sidekick@ and invoke it using the @sidekick@ shell command in your project folder. You should have a @.sidekick@ file in the active directory. Here is a sample:
 
 <pre>
 <code lang='ruby'>
+
+# restarts passenger on file changes and
+# notifies via growl or libnotify
 watch '**/*.rb' do |paths|
   restart_passenger
+  notify 'Are you tired of being notified yet?'
 end
 
-watch 'assets/**/*.coffee' do |paths|
-  puts `coffee -b -c -o public/~/js assets/js` #bare, compile, output
+# shows a new fortune every 10 seconds
+every(10) do    
+  sh 'fortune'
 end
 
-watch 'assets/**/*.sass' do |paths|
-  puts `sass --update assets/css:public/~/css`
-end
 </code>
 </pre>
 
-The @watch@ method above is a trigger, while @restart_passenger@ is an example of a helper method. The currently available triggers and helpers are:
+The @watch@ and @every@ commands are are triggers, while @notify@, @sh@, and @restart_passenger@ are helper methods. The currently available triggers and helpers are:
 
 Triggers:
 
-* watch(paths)
+|@watch@|run on file changes|
+|@every(duration)@|run every @duration@ of seconds|
 
 Helpers:
 
-* restart_passenger
+|@sh@|run shell command, showing output, like in rake|
+|@log@|log events to screen. cleaner than puts.|
+|@notify@|notify user via growl, libnotify etc|
+|@running?(platform)@|os can be one of @[:linux, :darwin, :other]@|
+|@load_gem?(name)@|tries to load gem, true if success. otherwise false. informs user that more functions are available when it is installed|
+|@restart_passenger@|restart passenger based environments by touching tmp/restart.txt|
 
+h2. Writing extensions
 
-h2. Writing new sidekicks and helpers
+Sidekick is very easy to extend.
 
-Sidekick is easy to extend. To add more helpers, simply add methods to @Sidekick::Helpers@. To add triggers, use @Sidekick.register@. As an example, the following code implements the @watch@ trigger used above:
+h3. Writing new helpers
+
+To add more helpers, simply add methods to @Sidekick::Helpers@, like this:
 
 <pre>
 <code lang='ruby'>
-Sidekick.register(:watch) do |callback, glob|
-  fs = Sidekick::Watch::FSObserver.new(glob)
-
-  Sidekick.timeshare do
-    unless (changes = fs.changed).empty?
-      Sidekick.log "watch #{changes.inspect}"
-      callback.call(changes)
+  module Sidekick::Helpers
+    def make_pickle
+      PickeFactory.manufacture!
     end
   end
-end
 </code>
 </pre>
 
-The @Sidekick.timeshare@ block seen above will be executed every second, and is a convenient way to do periodical checks without blocking or forking.
+When adding a group it is cleaner to use a separate module under @Sidekick::Helpers@, and then include it.
 
 
-h2. Inspired by
+h3. Writing new triggers
 
-* "Guard":http://github.com/guard/guard
+To add new triggers, you have two options: block or class interface. Blocks are best for simple stuff, while classes are good for more complex code. This is how you set up a new trigger using a block:
 
+<pre>
+<code lang='ruby'>
 
-h2. Last words
+register :every do |callback, duration|
+  timeshare(duration) do
+    callback.call
+  end
+end
 
-Let me know if you write some new triggers or helpers, so they can be gathered here for others to use.
+</code>
+</pre>
+
+This is the implementation of the @every@ function mentioned earlier. The @timeshare@ method is provided by Sidekick, and will call the supplied block with the specified duration in seconds. This is also useful for polling something without blocking other triggers.
+
+Triggers can also be written as a class interface. Here is an example of the above, translated as a class:
+
+<pre>
+<code lang='ruby'>
+
+class Sidekick::Triggers::Every
+
+  def initialize(callback, duration)
+    @callback = callback
+    @duration = duration
+  end
+
+  def poll
+    @callback.call
+  end
+
+  def poll_freq
+    @duration
+  end
+end
+
+</code>
+</pre>
+
+Here, the optional @poll@ method functions like the callback block in the previous example. The @poll_freq@ method is also optional, and determines the frequency in seconds with which to call @poll@.
+
+h3. When writing your own extensions
+
+You can keep your extensions in the @.sidekick@ file, or in a separate gem, or (better yet) ask me to merge them into the main repository.
+
+h2. One more feature
+
+Fascinatingly, the main code chunk is just under 100 lines including documentation, excluding the default triggers and helpers. Why not read it..?
+
+I got a bit of inspiration from the somewhat similar project "Guard":http://github.com/guard/guard
 
 
 h3. Copyright

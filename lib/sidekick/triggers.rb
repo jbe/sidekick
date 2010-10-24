@@ -7,7 +7,8 @@ module Sidekick::Triggers
   def self.register_class(keyword, kls)
     register(keyword) do |*prms|
       o = kls.new(*prms)
-      timeshare { o.poll } if o.respond_to? :poll
+      freq = o.respond_to?(:poll_freq) ? o.poll_freq : 1
+      timeshare(freq) { o.poll } if o.respond_to? :poll
     end
   end
 

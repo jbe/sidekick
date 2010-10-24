@@ -73,10 +73,10 @@ module Sidekick
           exit
         end
 
-        0.upto(Infinity) do |n|
-          0.upto(@@timeshare_callbacks.size) do |i|
+        0.upto(1.0/0) do |n|
+          0.upto(@@timeshare_callbacks.size - 1) do |i|
             if n % @@timeshare_frequencies[i] == 0
-              @timeshare_callbacks[n].call
+              @@timeshare_callbacks[i].call(n)
             end
           end
           sleep 1

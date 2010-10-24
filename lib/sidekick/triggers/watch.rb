@@ -1,27 +1,18 @@
 
-require 'rbconfig'
 
 module Sidekick::Triggers::Watch
 
   def self.new(*args)
-    case platform
+    case ::Sidekick::Helpers.platform
       when :linux then Polling
       when :darwin then Polling
       else Polling
     end.new(*args)
   end
 
-  # returns current platform: :linux, :darwin, :other
-  def self.platform
-    [:linux, :darwin].each do |plf|
-        Config::CONFIG['target_os'] =~ /#{plf}/i ? plf : :other
-    end
-  end
-
   class Polling
 
     def initialize(callback, glob, ignore_first=false)
-      puts callback.inspect
       ::Sidekick::Triggers.log "polling #{glob} for file changes.."
       @path = glob
       @file_timestamps = {}
@@ -31,7 +22,7 @@ module Sidekick::Triggers::Watch
 
     def poll
       if changed?
-        ::Sidekick::Triggers.log "watch #{@changes.inspect}"
+        ::Sidekick::Triggers.log "modified #{@changes.inspect}"
         @callback.call(@changes)
       end
     end

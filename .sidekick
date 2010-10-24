@@ -3,11 +3,15 @@
 # by doing. Proper tests are welcome.
 
 watch '**/*.rb' do |paths|
-  puts 'codebase_updated!'
+  sh 'echo files updated'
 end
 
 every(5) do
-  puts 'Five seconds passed!'
+  log 'Five seconds passed!'
+end
+
+every(20) do
+  notify 'Are you tired of being notified yet?'
 end
 
 # vim:ft=ruby
