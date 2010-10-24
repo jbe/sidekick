@@ -3,11 +3,11 @@
 # by doing. Proper tests are welcome.
 
 watch '**/*.rb' do |paths|
-  sh 'echo files updated'
+  log 'files updated'
 end
 
-every(5) do
-  log 'Five seconds passed!'
+every(10) do
+  sh 'fortune'
 end
 
 every(20) do
