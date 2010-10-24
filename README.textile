@@ -4,12 +4,12 @@ Sidekick is a command line tool to automatically trigger certain tasks following
 
 You would typically run it in the background while coding, to automatize things like restarting development servers on file changes, or recompiling assets. Other use cases could be continous testing, periodically running a command, etc.
 
-The main code is approx 100 lines of code including documentation, excluding triggers and helpers.
+The main code is approx 100 lines including documentation, excluding triggers and helpers.
 
 
 h2. Basic usage
 
-After running @gem install sidekick@, invoke it using the @sidekick@ shell command. You should have a .sidekick file in your project directory for this. A sample file:
+After running @gem install sidekick@, invoke it using the @sidekick@ shell command. You should have a @.sidekick@ file in your project directory for this. A sample file:
 
 <pre>
 <code lang='ruby'>

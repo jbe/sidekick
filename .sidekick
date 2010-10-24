@@ -1,0 +1,9 @@
+
+# This is an example sidekick file that i use for testing
+# by doing. Proper tests are welcome.
+
+watch '**/*.rb' do |paths|
+  puts 'codebase_updated!'
+end
+
+# vim:ft=ruby

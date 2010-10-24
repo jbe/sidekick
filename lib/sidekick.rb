@@ -1,16 +1,21 @@
+require 'rbconfig'
+
 
 module Sidekick
 
   @@timeshare = []
+  @@refresh = 1
 
   class << self
     # creates a module wrapper, which in turn
     # evaluates the .sidekick config file within
     # its own scope
     def run!(conf_path='.sidekick')
+      abort('No .sidekick file!') unless File.exists?(conf_path)
       Context.new(conf_path)
       enter_loop
     end
+
 
     # registers a sidekick available to config files
     def register(name, &block)
@@ -18,16 +23,20 @@ module Sidekick
     end
 
     # registers a callback for timesharing between
-    # sidekicks
+    # active sidekicks
     def timeshare(&callback)
       @@timeshare << callback
     end
 
     # begins the timesharing loop
     def enter_loop
+      Signal.trap :INT do
+        exit
+      end
+
       loop do
         @@timeshare.each {|blk| blk.call }
-        sleep 1
+        sleep @@refresh
       end
     end
 
@@ -36,12 +45,21 @@ module Sidekick
     def log(str)
       puts str
     end
+
+    # returns current platform: :linux, :darwin, :other
+    def platform
+      [:linux, :darwin].each do |plf|
+        if Config::CONFIG['target_os'] =~ /#{plf}/i
+          return plf
+        end
+      end
+      other
+    end
   end
 
 
   # A new Context is used to run the .sidekick
-  # config file. It simply extends Module for
-  # this purpose.
+  # config file. It simply extends Module.
   class Context < ::Module
     def initialize(conf_path)
       super()
@@ -64,20 +82,22 @@ module Sidekick
     end
 
     def method_missing(name, *args, &blk)
-      @@actions[name].call(blk, *args) if @@actions[name]
+      if @@actions[name]
+        @@actions[name].call(blk, *args)
+      else
+        super
+      end
     end
 
     def respond_to?(method)
       super || !!@@actions[method]
     end
   end
+
 end
 
-
-
 require 'sidekick/helpers'
+require 'sidekick/triggers'
 
-require 'sidekick/watch'
 
 
-Sidekick.run!

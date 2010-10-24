@@ -27,8 +27,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "bin/sidekick",
      "lib/sidekick.rb",
-     "lib/sidekick/helpers.rb",
-     "lib/sidekick/watch.rb",
+     "sidekick.gemspec",
      "test/helper.rb",
      "test/test_sidekick.rb"
   ]
