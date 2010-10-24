@@ -1,60 +1,14 @@
-require 'rbconfig'
 
 
 module Sidekick
 
-  @@timeshare = []
-  @@refresh = 1
-
-  class << self
-    # creates a module wrapper, which in turn
-    # evaluates the .sidekick config file within
-    # its own scope
-    def run!(conf_path='.sidekick')
-      abort('No .sidekick file!') unless File.exists?(conf_path)
-      Context.new(conf_path)
-      enter_loop
-    end
-
-
-    # registers a sidekick available to config files
-    def register(name, &block)
-      MethodProxy.register(name, block)
-    end
-
-    # registers a callback for timesharing between
-    # active sidekicks
-    def timeshare(&callback)
-      @@timeshare << callback
-    end
-
-    # begins the timesharing loop
-    def enter_loop
-      Signal.trap :INT do
-        exit
-      end
-
-      loop do
-        @@timeshare.each {|blk| blk.call }
-        sleep @@refresh
-      end
-    end
-
-    # logs sidekick events. helpers should just call
-    # the local log method instead.
-    def log(str)
-      puts str
-    end
-
-    # returns current platform: :linux, :darwin, :other
-    def platform
-      [:linux, :darwin].each do |plf|
-        if Config::CONFIG['target_os'] =~ /#{plf}/i
-          return plf
-        end
-      end
-      other
-    end
+  # creates a module wrapper, which in turn
+  # evaluates the .sidekick config file within
+  # its own scope
+  def self.run!(conf_path='.sidekick')
+    abort('No .sidekick file!') unless File.exists?(conf_path)
+    Context.new(conf_path)
+    Triggers.enter_loop
   end
 
 
@@ -70,34 +24,73 @@ module Sidekick
     end
   end
 
-  # New contexts also extend MethodProxy, so that
-  # they can forward method calls to the registered
-  # sidekicks.
+  # New contexts also extend MethodProxy, so that they
+  # can forward method calls to the registered sidekicks.
   module MethodProxy
-    @@actions = {}
+    @@triggers = {}
 
-    # registers a sidekick
+    # registers a trigger
     def self.register(name, block)
-      @@actions[name] = block
+      @@triggers[name] = block
     end
 
     def method_missing(name, *args, &blk)
-      if @@actions[name]
-        @@actions[name].call(blk, *args)
+      if @@triggers[name]
+        @@triggers[name].call(blk, *args)
       else
         super
       end
     end
 
     def respond_to?(method)
-      super || !!@@actions[method]
+      super || !!@@triggers[method]
     end
   end
 
+  # contains trigger helpers and logic to register
+  # triggers, making them available in sidekick
+  module Triggers
+    @@timeshare_callbacks = []
+    @@timeshare_frequencies = []
+
+    class << self
+
+      # registers a sidekick available to .sidekick files
+      def register(name, &block)
+        MethodProxy.register(name, block)
+      end
+
+      # registers a callback for timesharing between
+      # active sidekicks
+      def timeshare(freq=1, &callback)
+        @@timeshare_callbacks << callback
+        @@timeshare_frequencies << freq
+      end
+
+      # begins the timesharing loop
+      def enter_loop
+        Signal.trap :INT do
+          exit
+        end
+
+        0.upto(Infinity) do |n|
+          0.upto(@@timeshare_callbacks.size) do |i|
+            if n % @@timeshare_frequencies[i] == 0
+              @timeshare_callbacks[n].call
+            end
+          end
+          sleep 1
+        end
+      end
+
+      def log(str)
+        puts str
+      end
+
+    end
+  end
 end
 
 require 'sidekick/helpers'
 require 'sidekick/triggers'
-
-
 

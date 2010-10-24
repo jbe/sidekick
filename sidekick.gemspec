@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
      "bin/sidekick",
      "lib/sidekick.rb",
      "lib/sidekick/helpers.rb",
-     "lib/sidekick/trigger_lib/file_change.rb",
      "lib/sidekick/triggers.rb",
      "sidekick.gemspec",
      "test/helper.rb",

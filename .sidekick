@@ -6,4 +6,8 @@ watch '**/*.rb' do |paths|
   puts 'codebase_updated!'
 end
 
+every(5) do
+  puts 'Five seconds passed!'
+end
+
 # vim:ft=ruby
