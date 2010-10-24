@@ -1,0 +1,74 @@
+h1. Sidekick [Draft]
+
+Sidekick is a simple and flexible development automation framework. You can use it to trigger tasks following certain events, as defined in a @.sidekick@ file in the project folder. You would typically run it in the background while working, to automatize common tasks, such as restarting development servers on file changes, or recompiling assets.
+
+Other use cases could be continous testing, or any event/action pair really.
+
+
+h2. Basic usage
+
+To invoke sidekick, use the @sidekick@ shell command. You should have a .sidekick file in your project directory to do this. Here is a sample:
+
+<pre>
+<code lang='ruby'>
+watch '**/*.rb' do |paths|
+  restart_passenger
+end
+
+watch 'assets/**/*.coffee' do |paths|
+  puts `coffee -b -c -o public/~/js assets/js` #bare, compile, output
+end
+
+watch 'assets/**/*.sass' do |paths|
+  puts `sass --update assets/css:public/~/css`
+end
+</code>
+</pre>
+
+The @watch@ method above is a trigger, while @restart_passenger@ is an example of a helper method. The currently available triggers and helpers are:
+
+Triggers:
+
+* watch(paths)
+
+Helpers:
+
+* restart_passenger
+
+
+h2. Writing new sidekicks and helpers
+
+Sidekick is very modular and extensible. Apart from the custom .sidekick file per project, more triggers and action helpers can be easily added as well.
+
+To add more helpers, simply add methods to @Sidekick::Helpers@
+
+To add triggers, you call @Sidekick.register@. The following code implements @watch@ trigger used above:
+
+<pre>
+<code lang='ruby'>
+Sidekick.register(:watch) do |callback, glob|
+  fs = Sidekick::Watch::FSObserver.new(glob)
+
+  Sidekick.timeshare do
+    unless (changes = fs.changed).empty?
+      Sidekick.log "watch #{changes.inspect}"
+      callback.call(changes)
+    end
+  end
+end
+</code>
+</pre>
+
+The @Sidekick.timeshare@ block will be executed every second, and is a convenient way to add periodical checks without blocking.
+
+
+h2. Last words
+
+The base source code is approx 100 lines. So reading and understanding is very possible.
+
+If you write new sidekicks or helpers, it would be awesome if you pushed them back or let me know somehow so we can extend the collection.
+
+
+h3. Copyright
+
+Copyright (c) 2010 Jostein Berre Eliassen,. See LICENSE for details.

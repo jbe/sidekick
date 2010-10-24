@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'sidekick'
+rescue LoadError
+  require 'rubygems'
+  require 'sidekick'
+end
+
+Sidekick.run!

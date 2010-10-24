@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "sidekick"
     gem.summary = %Q{Automatically run common project tasks according to triggers defined in .sidekick}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.description = %Q{Automatically run common project tasks according to triggers defined in a .sidekick file. Easy, powerful configuration per project. Provides pre-defined sidekicks for things like watching for file changes, and allows easy definition of new ones. Contains helpers for common tasks such as compiling assets or triggering development server restarts.}
     gem.email = "post@jostein.be"
     gem.homepage = "http://github.com/jbe/sidekick"
     gem.authors = ["Jostein Berre Eliassen,"]
