@@ -19,7 +19,7 @@ watch '**/*.rb' do |paths|
   notify 'Are you tired of being notified yet?'
 end
 
-# keeps the developers mind agile
+# keeps the developer's mind agile
 every(10) do
   notify sh('fortune')
 end
