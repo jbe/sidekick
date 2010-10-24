@@ -40,7 +40,7 @@ Helpers:
 
 h2. Writing new sidekicks and helpers
 
-Sidekick is easy to extend. To add more helpers, simply add methods to @Sidekick::Helpers@. To add triggers, use @Sidekick.register@. As an example, the following code implements @watch@ trigger used above:
+Sidekick is easy to extend. To add more helpers, simply add methods to @Sidekick::Helpers@. To add triggers, use @Sidekick.register@. As an example, the following code implements the @watch@ trigger used above:
 
 <pre>
 <code lang='ruby'>
