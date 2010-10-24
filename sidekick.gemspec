@@ -21,12 +21,16 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
      ".gitignore",
+     ".sidekick",
      "LICENSE",
      "README.textile",
      "Rakefile",
      "VERSION",
      "bin/sidekick",
      "lib/sidekick.rb",
+     "lib/sidekick/helpers.rb",
+     "lib/sidekick/trigger_lib/file_change.rb",
+     "lib/sidekick/triggers.rb",
      "sidekick.gemspec",
      "test/helper.rb",
      "test/test_sidekick.rb"

@@ -1,6 +1,6 @@
 
 
-module SideKick::Triggers
+module Sidekick::Triggers
 
   require 'sidekick/triggers/file_change'
 
