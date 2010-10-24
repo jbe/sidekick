@@ -19,19 +19,19 @@ watch '**/*.rb' do |paths|
   notify 'Are you tired of being notified yet?'
 end
 
-# shows a new fortune in terminal every 10 seconds
+# keeps the developers mind agile
 every(10) do
-  sh 'fortune'
+  notify sh('fortune')
 end
 
 </code>
 </pre>
 
-The @watch@ and @every@ commands are are triggers, while @notify@, @sh@, and @restart_passenger@ are helper methods.
+The @watch@ and @every@ commands above are are triggers, while @notify@, @sh@, and @restart_passenger@ are helper methods.
 
 h3. Currently available triggers:
 
-|@watch@|run on file changes|
+|@watch(glob)@|run on file changes matching @glob@. Globs like Dir[]. |
 |@every(duration)@|run every @duration@ seconds|
 
 h3. Currently available helpers:

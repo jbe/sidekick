@@ -57,9 +57,10 @@ module Sidekick::Helpers
 
   def sh(cmd)
     log cmd
-    puts `#{cmd}`
+    puts result = `#{cmd}`
+    result
   end
-  
+
 
 
   def restart_passenger

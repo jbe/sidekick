@@ -3,14 +3,20 @@
 module Sidekick::Triggers::Watch
 
   def self.new(*args)
-    case ::Sidekick::Helpers.platform
-      when :linux then Polling
-      when :darwin then Polling
-      else Polling
-    end.new(*args)
+
+    name, adapter_class = {
+      :linux    => [nil,  Polling], # Ready to implement fs-event
+      :darwin   => [nil,  Polling], # and libnotify. Polling seems
+      :other    => [nil,  Polling]  # to work perfectly though.
+      }[::Sidekick::Helpers.platform]
+
+    unless name.nil?
+      adapter_class = Polling unless Sidekick::Helpers.load_gem?(name)
+    end
+    adapter_class.new(*args)
   end
 
-  class Polling
+  class Polling # todo: check for deletion
 
     def initialize(callback, glob, ignore_first=false)
       ::Sidekick::Triggers.log "polling #{glob} for file changes.."
@@ -45,9 +51,5 @@ module Sidekick::Triggers::Watch
         end
       end
   end
-
-# TODO inotify and mac support
-
-
 
 end

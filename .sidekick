@@ -6,12 +6,8 @@ watch '**/*.rb' do |paths|
   log 'files updated'
 end
 
-every(10) do
-  sh 'fortune'
-end
-
 every(20) do
-  notify 'Are you tired of being notified yet?'
+  notify sh('fortune')
 end
 
 # vim:ft=ruby
