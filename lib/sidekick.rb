@@ -69,6 +69,9 @@ module Sidekick
 
       # begins the timesharing loop
       def enter_loop
+        log '                       ^  ^  ^  ^    '
+        log ' == SIDEKICK ==    ^ ctrl-c to exit ^'
+        log '                                     '
         Signal.trap :INT do
           exit
         end
