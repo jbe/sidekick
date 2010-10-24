@@ -1,13 +1,15 @@
 h1. Sidekick [Draft]
 
-Sidekick is a simple and flexible development automation framework. You can use it to trigger tasks following certain events, as defined in a @.sidekick@ file in the project folder. You would typically run it in the background while working, to automatize common tasks, such as restarting development servers on file changes, or recompiling assets.
+Sidekick is a command line tool to automatically trigger certain tasks following certain events, as defined in a @.sidekick@ file in your project folder.
 
-Other use cases could be continous testing, or any event/action pair really.
+You would typically run it in the background while coding, to automatize things like restarting development servers on file changes, or recompiling assets. Other use cases could be continous testing, periodically running a command, etc.
+
+The main code is approx 100 lines of including documentation, excluding triggers and helpers.
 
 
 h2. Basic usage
 
-To invoke sidekick, use the @sidekick@ shell command. You should have a .sidekick file in your project directory to do this. Here is a sample:
+After running @gem install sidekick@, invoke it using the @sidekick@ shell command. You should have a .sidekick file in your project directory for this. A sample file:
 
 <pre>
 <code lang='ruby'>
@@ -38,11 +40,7 @@ Helpers:
 
 h2. Writing new sidekicks and helpers
 
-Sidekick is very modular and extensible. Apart from the custom .sidekick file per project, more triggers and action helpers can be easily added as well.
-
-To add more helpers, simply add methods to @Sidekick::Helpers@
-
-To add triggers, you call @Sidekick.register@. The following code implements @watch@ trigger used above:
+Sidekick is easy to extend. To add more helpers, simply add methods to @Sidekick::Helpers@. To add triggers, use @Sidekick.register@. As an example, the following code implements @watch@ trigger used above:
 
 <pre>
 <code lang='ruby'>
@@ -59,16 +57,19 @@ end
 </code>
 </pre>
 
-The @Sidekick.timeshare@ block will be executed every second, and is a convenient way to add periodical checks without blocking.
+The @Sidekick.timeshare@ block seen above will be executed every second, and is a convenient way to do periodical checks without blocking or forking.
+
+
+h2. Inspired by
+
+* "Guard":http://github.com/guard/guard
 
 
 h2. Last words
 
-The base source code is approx 100 lines. So reading and understanding is very possible.
-
-If you write new sidekicks or helpers, it would be awesome if you pushed them back or let me know somehow so we can extend the collection.
+Let me know if you write some new triggers or helpers, so they can be gathered here for others to use.
 
 
 h3. Copyright
 
-Copyright (c) 2010 Jostein Berre Eliassen,. See LICENSE for details.
+Copyright (c) 2010 Jostein Berre Eliassen. See LICENSE for details.
