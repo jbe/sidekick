@@ -7,4 +7,7 @@ rescue LoadError
   require 'sidekick'
 end
 
+puts '                       ^  ^  ^  ^    '
+puts ' == SIDEKICK ==    ^ ctrl-c to exit ^'
+puts '                                     '
 Sidekick.run!

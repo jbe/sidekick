@@ -1,0 +1,23 @@
+
+
+
+# now delete this line :)
+abort 'Please edit the .sidekick file!'
+
+
+
+# some sample configurations:
+
+
+
+
+
+
+
+
+
+
+
+
+
+# vim:ft=ruby

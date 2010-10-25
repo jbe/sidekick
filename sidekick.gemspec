@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sidekick}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jostein Berre Eliassen,"]
-  s.date = %q{2010-10-24}
+  s.date = %q{2010-10-25}
   s.default_executable = %q{sidekick}
-  s.description = %q{Automatically run common project tasks according to triggers defined in a .sidekick file. Easy, powerful configuration per project. Provides pre-defined sidekicks for things like watching for file changes, and allows easy definition of new ones. Contains helpers for common tasks such as compiling assets or triggering development server restarts.}
+  s.description = %q{Automatically run common development tasks on events, as defined by a local .sidekick file. Easy, powerful dsl. Several pre-defined triggers. Helper methods for common tasks. Easy to extend with new triggers and helpers.}
   s.email = %q{post@jostein.be}
   s.executables = ["sidekick"]
   s.extra_rdoc_files = [
@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Automatically run common project tasks according to triggers defined in .sidekick}
+  s.summary = %q{Automatically run common development tasks on events, as defined by a local .sidekick file.}
   s.test_files = [
     "test/helper.rb",
      "test/test_sidekick.rb"

@@ -1,3 +1,4 @@
+require 'fileutils'
 
 
 module Sidekick
@@ -6,7 +7,12 @@ module Sidekick
   # evaluates the .sidekick config file within
   # its own scope
   def self.run!(conf_path='.sidekick')
-    abort('No .sidekick file!') unless File.exists?(conf_path)
+    unless File.exists?(conf_path)
+      puts 'Generate new sidekick file? (Y/n)'
+      if gets[0..0] =~ /Yy / # 1.8 and 1.9 compatibility
+        FileUtils.cp(File.expand_path('../template', __FILE__), '.sidekick')
+      end
+    end
     Context.new(conf_path)
     Triggers.enter_loop
   end
@@ -69,9 +75,6 @@ module Sidekick
 
       # begins the timesharing loop
       def enter_loop
-        log '                       ^  ^  ^  ^    '
-        log ' == SIDEKICK ==    ^ ctrl-c to exit ^'
-        log '                                     '
         Signal.trap :INT do
           exit
         end
@@ -96,4 +99,3 @@ end
 
 require 'sidekick/helpers'
 require 'sidekick/triggers'
-
