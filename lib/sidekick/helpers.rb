@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'rbconfig'
+require 'tilt'
 
 
 # default helpers
@@ -67,5 +68,30 @@ module Sidekick::Helpers
     FileUtils.touch './tmp/restart.txt'
     log 'restarted passenger'
   end
+
+
+
+
+  # watches for changes matching the source glob,
+  # compiles using the tilt gem, and saves to
+  # target. Target is interpolated for :name
+  def auto_compile(source, target)
+    watch(source) do |files|
+      files.each do |file|
+        begin
+          target.gsub! ':name', File.basename(file, '.*')
+          File.open(target, 'w') do |f|
+            f.write(Tilt.new(file).render)
+          end
+          log "rendered #{file} => #{target}"
+        rescue Exception => e
+          notify "Error in #{file}:\n#{e}"
+        end
+      end
+    end
+  end
+
+
+
 
 end

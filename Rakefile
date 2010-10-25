@@ -10,8 +10,7 @@ begin
     gem.email = "post@jostein.be"
     gem.homepage = "http://github.com/jbe/sidekick"
     gem.authors = ["Jostein Berre Eliassen,"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.add_dependency "tilt", ">= 1"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
