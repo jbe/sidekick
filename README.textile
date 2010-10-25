@@ -1,48 +1,46 @@
 h1. Sidekick
 
 
-Sidekick is a command line tool to automatically trigger running tasks on certain events, such as when you make updates. This is defined per project, in a local @.sidekick@ file in your project folder.
+Sidekick is a command line tool to automatically trigger actions on certain events, as defined per project, in a local @.sidekick@ file in your project folder.
+
+h3. Use cases
+
+* Restart server when code is changed
+* Compile sass and CoffeeScript templates when they are updated
+* Continuous testing, with notifications and flexible hooks
+* Periodically running commands
+
+You typically run Sidekick in the background while coding, to automate all this.
 
 h3. Features
 
 * Simple, powerful dsl. "Examples here.":http://github.com/jbe/sidekick/blob/master/lib/template
-* Pre-defined triggers.
-* Pre-defined helpers for common tasks.
+* Triggers for watching files etc.
+* Helpers for compiling templates etc.
 * Easy to write new triggers and helpers.
-* Esily compiles most languages thanks to "Tilt":http://github.com/rtomayko/tilt.
+* Already compiles many languages, thanks to "Tilt":http://github.com/rtomayko/tilt.
     
-h3. Use cases
-
-* Triggering server restart when code is changed
-* Automatically compiling sass, CoffeeScript, etc.
-* Continuous testing with notifications or hooks
-* Periodically running commands
-
-
-You would typically run it in the background while coding, to automatize things like restarting development servers on file changes, recompiling assets, continously running tests or periodically running commands.
 
 
 h2. Basic usage
 
-Install with @gem install sidekick@ and invoke it using the @sidekick@ shell command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
+Install with @gem install sidekick@ and invoke using the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
 
-I recommend "reading the template":http://github.com/jbe/sidekick/blob/master/lib/template.
-
-The @watch@ and @every@ commands you see in it are triggers, while @notify@, @sh@, and @restart_passenger@ are helper methods. Some helpers, like @auto_compile@ set up both triggers and actions for you.
+I recommend "reading this template":http://github.com/jbe/sidekick/blob/master/lib/template. Some helpers, like @auto_compile@ set up both triggers and actions for you.
 
 h3. Currently available triggers:
 
-|@watch(glob)@|run on file changes matching @glob@. Globs like @Dir[]@. |
-|@every(duration)@|run every @duration@ seconds|
+|@watch(glob) { ... }@|run on file changes matching @glob@. Globs like "Dir[]:"http://ruby-doc.org/core/classes/Dir.html#M002323". |
+|@every(duration) { ... }@|run every @duration@ seconds|
 
 h3. Currently available helpers:
 
-|@sh(cmd)@|run shell command, showing output, like in rake|
-|@log(str)@|log events to screen. cleaner than puts.|
-|@notify@|notify user via growl, libnotify etc|
-|@auto_compile(source_glob, target_path)@|compile using tilt on file changes (language automatically detected -- see template examples and tilt documentation)|
+|@sh(cmd)@|run shell command, printing and returning output|
+|@log(str)@|log events to @STDOUT@.|
+|@notify(message, title='sidekick')@|notify user via growl, libnotify etc.|
+|@auto_compile(source_glob, target_path)@|compile on file changes using tilt (language automatically detected -- see example usage in template, and tilt documentation)|
 |@restart_passenger@|restart passenger based environments by touching tmp/restart.txt|
-|@load_gem?(name)@|tries to load gem, true if success. otherwise false. informs user that more functions are available if they install it|
+|@load_gem?(name)@|tries to @name@, true if success. otherwise false. informs user that more functions are available if they install it|
 
 h2. Writing extensions
 
@@ -60,17 +58,25 @@ To add more helpers, simply add methods to @Sidekick::Helpers@, like this:
 </code>
 </pre>
 
-When adding a group of methods it may be cleaner to use a separate module under @Sidekick::Helpers@, and then including it.
+They will be available to other helpers and to @.sidekick@ files. Also, if adding a group of methods it may be cleaner to use a separate module under @Sidekick::Helpers@, and then including it.
 
 
 h3. Writing new triggers
 
-To add new triggers, you have two options: blocks, and classes. Blocks are best for simple stuff, while classes are good for more complex code. This is how you set up a new trigger using a block:
+To add new triggers, you have two options: blocks, and classes. Blocks are best for simple stuff, while classes are good for more complex code. Here are some examples of how you set up a new trigger using a block:
 
 <pre>
 <code lang='ruby'>
 
-register :every do |callback, duration|
+Sidekick::Triggers.register(:never) {|callback| }
+# available in .sidekick as:
+# never { puts 'nobody listens to me' }
+
+Sidekick::Triggers.register(:on_startup) {|callback| callback.call }
+# available as:
+# on_startup { puts 'better to do this in the main scope than here' }
+
+Sidekick::Triggers.register(:every) do |callback, duration|
   timeshare(duration) do
     callback.call
   end
@@ -79,9 +85,9 @@ end
 </code>
 </pre>
 
-This is the internal implementation of the @every@ function seen earlier. The @timeshare@ method is provided by Sidekick to all extensions, and will call the supplied block every @duration@ seconds. This is also useful for polling something without blocking or forking.
+The last example is the internal implementation of the @every@ trigger seen earlier, which calls a block periodically. The @callback@ is the block given to the trigger in the @.sidekick@ file. The @timeshare@ method is a special method provided by Sidekick to all extensions, to register the supplied block so that it is called every @duration@ seconds. This is useful for polling something without blocking or forking.
 
-Next, here is an example of the above written as a class:
+Next, here is an example of the last example above written as a class:
 
 <pre>
 <code lang='ruby'>
@@ -113,11 +119,11 @@ h2. Final lines...
 
 The main code chunk of Sidekick is just under 100 lines, including documentation, excluding the default triggers and helpers. Why not read it..?
 
-You can keep your extensions in the @.sidekick@ file itself, or package them in gems, or ask me to merge them into the main repository.
+You can keep your extensions in the @.sidekick@ file itself, or package them in gems, or (better) ask me to merge them into the main repository.
 
 Similar projects:
 
-* "Guard":http://github.com/guard/guard (too enterprisey for me)
+* "Guard":http://github.com/guard/guard (too enterprisey)
 
 
 h3. Copyright
