@@ -1,12 +1,17 @@
 # This is an example sidekick file that i use for testing
 # by doing. Proper tests are welcome.
 
-watch '**/*.rb' do |paths|
-  log 'files updated'
-end
 
-every(20) do
-  notify sh('fortune')
-end
+
+
+# watch '**/*.rb' {|paths| log 'made edits' }
+
+# every(20) { notify sh 'fortune' }
+
+auto_compile 'test/fixtures/*.haml', 'test/output/:name.html'
+
+auto_compile 'test/fixtures/*.sass', 'test/output/:name.css'
+
+auto_compile 'test/fixtures/*.coffee', 'test/output/:name.js'
 
 # vim:ft=ruby

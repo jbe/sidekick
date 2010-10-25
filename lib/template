@@ -1,19 +1,22 @@
 
 
 
-# now delete this line :)
-abort 'Please edit the .sidekick file!'
+
+abort "A new .sidekick file was generated -- now you just have to edit it."
 
 
+# now delete the above, and tell me what to do.
+# here are some samples:
 
-# some sample configurations:
-
-
-
-
-
-
-
+# watch('**/*.rb') { restart_passenger }
+#
+# auto_compile 'assets/css/*.sass', 'public/css/:name.css'
+#
+# auto_compile 'assets/js/*.coffee', 'public/js/:name.js'
+#
+# every(60) { notify 'You are now one minute older.' }
+#
+# every(60*15) { notify sh fortune }
 
 
 

@@ -1,6 +1,5 @@
 require 'fileutils'
 
-
 module Sidekick
 
   # creates a module wrapper, which in turn
@@ -9,8 +8,10 @@ module Sidekick
   def self.run!(conf_path='.sidekick')
     unless File.exists?(conf_path)
       puts 'Generate new sidekick file? (Y/n)'
-      if gets[0..0] =~ /Yy / # 1.8 and 1.9 compatibility
-        FileUtils.cp(File.expand_path('../template', __FILE__), '.sidekick')
+      unless gets =~ /^N|n/ # 1.8 and 1.9 compatibility
+        FileUtils.cp(File.expand_path('../template', __FILE__), conf_path)
+      else
+        exit
       end
     end
     Context.new(conf_path)
