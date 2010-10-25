@@ -6,7 +6,7 @@ Sidekick is a command line tool to automatically trigger actions on certain even
 h3. Use cases
 
 * Restart server when code is changed
-* Compile sass and CoffeeScript templates when they are updated
+* Compile Sass and CoffeeScript templates when they are updated
 * Continuous testing, with notifications and flexible hooks
 * Periodically running commands
 
@@ -14,23 +14,21 @@ You typically run Sidekick in the background while coding, to automate all this.
 
 h3. Features
 
-* Simple, powerful dsl. "Examples here.":http://github.com/jbe/sidekick/blob/master/lib/template
-* Triggers for watching files etc.
-* Helpers for compiling templates etc.
-* Easy to write new triggers and helpers.
+* Simple and powerful DSL. "Examples here.":http://github.com/jbe/sidekick/blob/master/lib/template
+* _Triggers_ for watching files etc.
+* _Helpers_ for compiling templates etc.
+* Easy to write new _triggers_ and _helpers_.
 * Already compiles many languages, thanks to "Tilt":http://github.com/rtomayko/tilt.
-    
+
 
 
 h2. Basic usage
 
-Install with @gem install sidekick@ and invoke using the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
-
-I recommend "reading this template":http://github.com/jbe/sidekick/blob/master/lib/template. Some helpers, like @auto_compile@ set up both triggers and actions for you.
+Install with @gem install sidekick@ and invoke using the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template. I recommend "reading it":http://github.com/jbe/sidekick/blob/master/lib/template.
 
 h3. Currently available triggers:
 
-|@watch(glob) { ... }@|run on file changes matching @glob@. Globs like "Dir[]:"http://ruby-doc.org/core/classes/Dir.html#M002323". |
+|@watch(glob) { ... }@|run on file changes matching @glob@. Globs like "Dir[]":http://ruby-doc.org/core/classes/Dir.html#M002323". |
 |@every(duration) { ... }@|run every @duration@ seconds|
 
 h3. Currently available helpers:
@@ -40,7 +38,9 @@ h3. Currently available helpers:
 |@notify(message, title='sidekick')@|notify user via growl, libnotify etc.|
 |@auto_compile(source_glob, target_path)@|compile on file changes using tilt (language automatically detected -- see example usage in template, and tilt documentation)|
 |@restart_passenger@|restart passenger based environments by touching tmp/restart.txt|
-|@load_gem?(name)@|tries to @name@, true if success. otherwise false. informs user that more functions are available if they install it|
+|@load_gem?(name)@|tries to require @name@; returns true if success. otherwise false. informs user that more functions are available if they install it|
+
+Note how some helpers, like @auto_compile@ set up both triggers and actions for you.
 
 h2. Writing extensions
 
@@ -69,11 +69,11 @@ To add new triggers, you have two options: blocks, and classes. Blocks are best 
 <code lang='ruby'>
 
 Sidekick::Triggers.register(:never) {|callback| }
-# available in .sidekick as:
+# available in .sidekick like:
 # never { puts 'nobody listens to me' }
 
 Sidekick::Triggers.register(:on_startup) {|callback| callback.call }
-# available as:
+# available like:
 # on_startup { puts 'better to do this in the main scope than here' }
 
 Sidekick::Triggers.register(:every) do |callback, duration|
@@ -85,9 +85,9 @@ end
 </code>
 </pre>
 
-The last example is the internal implementation of the @every@ trigger seen earlier, which calls a block periodically. The @callback@ is the block given to the trigger in the @.sidekick@ file. The @timeshare@ method is a special method provided by Sidekick to all extensions, to register the supplied block so that it is called every @duration@ seconds. This is useful for polling something without blocking or forking.
+The last example is the internal implementation of the @every@ trigger seen earlier, which calls the block periodically. @callback@ is the block given to the trigger in the @.sidekick@ file. @timeshare@ is a special method provided by Sidekick to all extensions, to register the supplied block to be called every @duration@ seconds. This is useful for polling something without blocking or doing something out of this world.
 
-Next, here is an example of the last example above written as a class:
+Now, here is the last example written as a class:
 
 <pre>
 <code lang='ruby'>
@@ -113,17 +113,17 @@ Sidekick::Triggers.register_class(:watch, Watch)
 </code>
 </pre>
 
-The @poll@ and @poll_freq@ methods are optional. @poll@ functions like the callback block in the previous example, while @poll_freq@ functions like the @duration@ argument, specifying how often to call @poll@ in seconds. Only integers are accepted. Finally, notice the last statement, which registers the class.
+The @poll@ and @poll_freq@ methods are optional. @poll@ functions like the callback block in the previous example, while @poll_freq@ functions like the @duration@ argument, specifying how often to call @poll@. Only integers (whole seconds) are accepted. Finally, notice the last statement, which registers the class.
 
-h2. Final lines...
+h2. Fun facts
 
-The main code chunk of Sidekick is just under 100 lines, including documentation, excluding the default triggers and helpers. Why not read it..?
+The main code chunk of Sidekick is just under 100 lines, including documentation, excluding the default triggers and helpers.
 
 You can keep your extensions in the @.sidekick@ file itself, or package them in gems, or (better) ask me to merge them into the main repository.
 
 Similar projects:
 
-* "Guard":http://github.com/guard/guard (too enterprisey)
+* "Guard":http://github.com/guard/guard (too enterprisey imho)
 
 
 h3. Copyright

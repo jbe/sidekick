@@ -5,7 +5,7 @@
 abort "A new .sidekick file was generated -- now you just have to edit it."
 
 
-# now delete the above, and set up some actions
+# now delete the above, and set up some actions.
 # here are some samples:
 
 # watch('**/*.rb') { restart_passenger }
