@@ -16,7 +16,7 @@ abort "A new .sidekick file was generated -- now you just have to edit it."
 #
 # every(60) { notify 'You are now one minute older.' }
 #
-# every(60*15) { notify sh fortune }
+# every(60*15) { notify sh 'fortune' }
 
 
 
