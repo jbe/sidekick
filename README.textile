@@ -1,33 +1,34 @@
 h1. Sidekick
 
-Sidekick is a command line tool to automatically trigger certain tasks following certain events, as defined in a @.sidekick@ file in your project folder.
+
+Sidekick is a command line tool to automatically trigger running tasks on certain events, such as when you make updates. This is defined per project, in a local @.sidekick@ file in your project folder.
+
+h3. Features
+
+* Simple, powerful dsl. "Examples here.":http://github.com/jbe/sidekick/blob/master/lib/template
+* Pre-defined triggers.
+* Pre-defined helpers for common tasks.
+* Easy to write new triggers and helpers.
+* Esily compiles most languages thanks to "Tilt":http://github.com/rtomayko/tilt.
+    
+h3. Use cases
+
+* Triggering server restart when code is changed
+* Automatically compiling sass, CoffeeScript, etc.
+* Continuous testing with notifications or hooks
+* Periodically running commands
+
 
 You would typically run it in the background while coding, to automatize things like restarting development servers on file changes, recompiling assets, continously running tests or periodically running commands.
 
 
 h2. Basic usage
 
-Install with @gem install sidekick@ and invoke it using the @sidekick@ shell command in your project folder. You should have a @.sidekick@ file in it. Here is a sample:
+Install with @gem install sidekick@ and invoke it using the @sidekick@ shell command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
 
-<pre>
-<code lang='ruby'>
+I recommend "reading the template":http://github.com/jbe/sidekick/blob/master/lib/template.
 
-# restarts passenger on file changes and
-# notifies via growl or libnotify
-watch '**/*.rb' do |paths|
-  restart_passenger
-  notify 'Are you tired of being notified yet?'
-end
-
-# keeps the developer's mind agile
-every(10) do
-  notify sh('fortune')
-end
-
-</code>
-</pre>
-
-The @watch@ and @every@ commands above are are triggers, while @notify@, @sh@, and @restart_passenger@ are helper methods.
+The @watch@ and @every@ commands you see in it are triggers, while @notify@, @sh@, and @restart_passenger@ are helper methods. Some helpers, like @auto_compile@ set up both triggers and actions for you.
 
 h3. Currently available triggers:
 
@@ -36,12 +37,12 @@ h3. Currently available triggers:
 
 h3. Currently available helpers:
 
-|@sh@|run shell command, showing output, like in rake|
-|@log@|log events to screen. cleaner than puts.|
+|@sh(cmd)@|run shell command, showing output, like in rake|
+|@log(str)@|log events to screen. cleaner than puts.|
 |@notify@|notify user via growl, libnotify etc|
-|@running?(platform)@|os can be one of @[:linux, :darwin, :other]@|
-|@load_gem?(name)@|tries to load gem, true if success. otherwise false. informs user that more functions are available if they make it available|
+|@auto_compile(source_glob, target_path)@|compile using tilt on file changes (language automatically detected -- see template examples and tilt documentation)|
 |@restart_passenger@|restart passenger based environments by touching tmp/restart.txt|
+|@load_gem?(name)@|tries to load gem, true if success. otherwise false. informs user that more functions are available if they install it|
 
 h2. Writing extensions
 
@@ -59,12 +60,12 @@ To add more helpers, simply add methods to @Sidekick::Helpers@, like this:
 </code>
 </pre>
 
-When adding a group of methods it may be cleaner to use a separate module under @Sidekick::Helpers@, and then include it.
+When adding a group of methods it may be cleaner to use a separate module under @Sidekick::Helpers@, and then including it.
 
 
 h3. Writing new triggers
 
-To add new triggers, you have two options: block or class interface. Blocks are best for simple stuff, while classes are good for more complex code. This is how you set up a new trigger using a block:
+To add new triggers, you have two options: blocks, and classes. Blocks are best for simple stuff, while classes are good for more complex code. This is how you set up a new trigger using a block:
 
 <pre>
 <code lang='ruby'>
@@ -78,9 +79,9 @@ end
 </code>
 </pre>
 
-This is the internal implementation of the @every@ function mentioned earlier. The @timeshare@ method is provided by Sidekick to all extensions, and will call the supplied block each @duration@ seconds. This is also useful for polling something without blocking or forking.
+This is the internal implementation of the @every@ function seen earlier. The @timeshare@ method is provided by Sidekick to all extensions, and will call the supplied block every @duration@ seconds. This is also useful for polling something without blocking or forking.
 
-Triggers can also be written as a class interface. Here is an example of the above, translated as a class:
+Next, here is an example of the above written as a class:
 
 <pre>
 <code lang='ruby'>
@@ -106,15 +107,17 @@ Sidekick::Triggers.register_class(:watch, Watch)
 </code>
 </pre>
 
-Here, the optional @poll@ method functions like the callback block in the previous example. The @poll_freq@ method is also optional, and determines the frequency in seconds with which to call @poll@. Finally, notice the last statement, which registers the class.
+The @poll@ and @poll_freq@ methods are optional. @poll@ functions like the callback block in the previous example, while @poll_freq@ functions like the @duration@ argument, specifying how often to call @poll@ in seconds. Only integers are accepted. Finally, notice the last statement, which registers the class.
 
 h2. Final lines...
 
-The main code chunk is just under 100 lines including documentation, excluding the default triggers and helpers. Why not read it..?
+The main code chunk of Sidekick is just under 100 lines, including documentation, excluding the default triggers and helpers. Why not read it..?
 
-You can keep your extensions in the @.sidekick@ file itself, or package in a separate gem, or ask me to merge them into the main repository.
+You can keep your extensions in the @.sidekick@ file itself, or package them in gems, or ask me to merge them into the main repository.
 
-I got a bit of inspiration from the somewhat similar project "Guard":http://github.com/guard/guard
+Similar projects:
+
+* "Guard":http://github.com/guard/guard (too enterprisey for me)
 
 
 h3. Copyright
