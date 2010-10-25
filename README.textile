@@ -1,7 +1,7 @@
 h1. Sidekick
 
 
-Sidekick is a command line tool to automatically trigger actions on certain events, as defined per project, in a local @.sidekick@ file in your project folder.
+"Sidekick":http://ibuildlegobricks.tumblr.com/post/1398895151/automate-common-tasks-with-sidekick is a command line tool to automatically trigger actions on certain events, as defined per project, in a local @.sidekick@ file in your project folder.
 
 h3. Use cases
 
@@ -15,9 +15,9 @@ You typically run Sidekick in the background while coding, to automate all this.
 h3. Features
 
 * Simple and powerful DSL. "Examples here.":http://github.com/jbe/sidekick/blob/master/lib/template
-* _Triggers_ for watching files etc.
-* _Helpers_ for compiling templates etc.
-* Easy to write new _triggers_ and _helpers_.
+* Use triggers to watch files etc.
+* Use helpers to compile templates etc.
+* Easy to write new triggers and helpers.
 * Already compiles many languages, thanks to "Tilt":http://github.com/rtomayko/tilt.
 
 
