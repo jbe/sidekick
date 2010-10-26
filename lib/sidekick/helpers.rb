@@ -79,8 +79,8 @@ module Sidekick::Helpers
     watch(source) do |files|
       files.each do |file|
         begin
-          target.gsub! ':name', File.basename(file, '.*')
-          File.open(target, 'w') do |f|
+          t = target.gsub ':name', File.basename(file, '.*')
+          File.open(t, 'w') do |f|
             f.write(Tilt.new(file).render)
           end
           log "rendered #{file} => #{target}"
