@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sidekick}
-  s.version = "0.3.0"
+  s.version = "0.4.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jostein Berre Eliassen,"]
-  s.date = %q{2010-10-25}
+  s.date = %q{2010-10-26}
   s.default_executable = %q{sidekick}
   s.description = %q{Automatically run common development tasks on events, as defined by a local .sidekick file. Easy, powerful dsl. Several pre-defined triggers. Helper methods for common tasks. Easy to extend with new triggers and helpers.}
   s.email = %q{post@jostein.be}
@@ -33,6 +33,9 @@ Gem::Specification.new do |s|
      "lib/sidekick/triggers/watch.rb",
      "lib/template",
      "sidekick.gemspec",
+     "test/fixtures/page.haml",
+     "test/fixtures/site.coffee",
+     "test/fixtures/styles.sass",
      "test/helper.rb",
      "test/test_sidekick.rb"
   ]

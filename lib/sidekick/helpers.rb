@@ -79,11 +79,11 @@ module Sidekick::Helpers
     watch(source) do |files|
       files.each do |file|
         begin
-          t = target.gsub ':name', File.basename(file, '.*')
+          t = target.gsub(':name', File.basename(file, '.*'))
           File.open(t, 'w') do |f|
             f.write(Tilt.new(file).render)
           end
-          log "rendered #{file} => #{target}"
+          log "render #{file} => #{t}"
         rescue Exception => e
           notify "Error in #{file}:\n#{e}"
         end

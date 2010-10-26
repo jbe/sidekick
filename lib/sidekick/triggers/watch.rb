@@ -28,7 +28,7 @@ module Sidekick::Triggers::Watch
 
     def poll
       if changed?
-        ::Sidekick::Triggers.log "modified #{@changes.inspect}"
+        ::Sidekick::Triggers.log "file change #{@changes.inspect}"
         @callback.call(@changes)
       end
     end
@@ -42,7 +42,7 @@ module Sidekick::Triggers::Watch
 
       def read_changes
         @changes = []
-        Dir[@path].each do |path|
+        Dir.glob(@path).each do |path|
           mtime = File.new('./' + path).mtime
           unless @file_timestamps[path] == mtime
             @changes << path
