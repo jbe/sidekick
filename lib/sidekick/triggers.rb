@@ -11,11 +11,11 @@ module Sidekick::Triggers
     EMDirWatcher.watch(
       File.expand_path('.'),
       :include_only => [glob],
-      :grace_period => 0.2,
+      :grace_period => 0.2
       ) do |paths|
-        log "watch #{paths.inspect}"
-        callback.call(paths)
-      end
+      log "watch #{paths.inspect}"
+      callback.call(paths)
+    end
   end
 
   register :every do |callback, duration|
