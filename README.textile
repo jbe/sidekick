@@ -24,11 +24,11 @@ h3. Features
 
 h2. Basic usage
 
-Install with @gem install sidekick@ and invoke using the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template. I recommend "reading it":http://github.com/jbe/sidekick/blob/master/lib/template.
+Install with @gem install sidekick@ and invoke using the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
 
 h3. Currently available triggers:
 
-|@watch(glob) { ... }@|run on file changes matching @glob@. Globs like "Dir[]":http://ruby-doc.org/core/classes/Dir.html#M002323". |
+|@watch(glob) { ... }@|run on file changes matching @glob@. Globs like "Dir[]":http://ruby-doc.org/core/classes/Dir.html#M002323. |
 |@every(duration) { ... }@|run every @duration@ seconds|
 
 h3. Currently available helpers:
@@ -38,7 +38,6 @@ h3. Currently available helpers:
 |@notify(message, title='sidekick')@|notify user via growl, libnotify etc.|
 |@auto_compile(source_glob, target_path)@|compile on file changes using tilt (language automatically detected -- see example usage in template, and tilt documentation)|
 |@restart_passenger@|restart passenger based environments by touching tmp/restart.txt|
-|@load_gem?(name)@|tries to require @name@; returns true if success. otherwise false. informs user that more functions are available if they install it|
 
 Note how some helpers, like @auto_compile@ set up both triggers and actions for you.
 
