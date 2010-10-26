@@ -1,102 +1,68 @@
 require 'fileutils'
+require 'eventmachine'
 
 module Sidekick
 
-  # creates a module wrapper, which in turn
-  # evaluates the .sidekick config file within
-  # its own scope
-  def self.run!(conf_path='.sidekick')
-    unless File.exists?(conf_path)
-      puts 'Generate new sidekick file? (Y/n)'
-      unless gets =~ /^N|n/ # 1.8 and 1.9 compatibility
-        FileUtils.cp(File.expand_path('../template', __FILE__), conf_path)
-      else
-        exit
-      end
-    end
-    Context.new(conf_path)
-    Triggers.enter_loop
-  end
-
-
-  # A new Context is used to run the .sidekick
-  # config file. It simply extends Module.
-  class Context < ::Module
-    def initialize(conf_path)
-      super()
-      extend MethodProxy
-      extend Helpers
-      code = open(conf_path) { |f| f.read }
-      module_eval(code, conf_path)
-    end
-  end
-
-  # New contexts also extend MethodProxy, so that they
-  # can forward method calls to the registered sidekicks.
-  module MethodProxy
+  module Triggers
     @@triggers = {}
 
-    # registers a trigger
-    def self.register(name, block)
+    def self.register(name, &block)
       @@triggers[name] = block
     end
 
+    def self.log(str) # used by triggers
+      puts str
+    end
+
     def method_missing(name, *args, &blk)
-      if @@triggers[name]
-        @@triggers[name].call(blk, *args)
-      else
-        super
-      end
+      @@triggers[name] ?
+        @@triggers[name].call(blk, *args) : super
     end
 
     def respond_to?(method)
       super || !!@@triggers[method]
     end
+
   end
 
-  # contains trigger helpers and logic to register
-  # triggers, making them available in sidekick
-  module Triggers
-    @@timeshare_callbacks = []
-    @@timeshare_frequencies = []
+  # default library
+  require 'sidekick/triggers'
+  require 'sidekick/helpers'
 
-    class << self
+  # context in which to evaluate .sidekick file
+  Context = Module.new
+  Context.extend Triggers
+  Context.extend Helpers
 
-      # registers a sidekick available to .sidekick files
-      def register(name, &block)
-        MethodProxy.register(name, block)
-      end
 
-      # registers a callback for timesharing between
-      # active sidekicks
-      def timeshare(freq=1, &callback)
-        @@timeshare_callbacks << callback
-        @@timeshare_frequencies << freq
-      end
-
-      # begins the timesharing loop
-      def enter_loop
-        Signal.trap :INT do
-          exit
-        end
-
-        0.upto(1.0/0) do |n|
-          0.upto(@@timeshare_callbacks.size - 1) do |i|
-            if n % @@timeshare_frequencies[i] == 0
-              @@timeshare_callbacks[i].call(n)
-            end
-          end
-          sleep 1
-        end
-      end
-
-      def log(str)
-        puts str
-      end
-
+  def self.ensure_config_exists(path)
+    unless File.exists?(path)
+      puts 'Generate new sidekick file? (Y/n)'
+      gets =~ /^N|n/ ?
+        FileUtils.cp(File.expand_path('../template',
+          __FILE__), path) : exit
     end
   end
-end
 
-require 'sidekick/helpers'
-require 'sidekick/triggers'
+  # reads and applies the .sidekick file, and begins
+  # the event loop.
+  def self.run!(path='.sidekick')
+
+    ensure_config_exists(path)
+
+    Signal.trap(:INT) { ::Sidekick.stop }
+
+    EventMachine.run do
+      Context.module_eval(
+        open(path) {|f| f.read }, path )
+    end
+  end
+
+  # stops Sidekick gracefully
+  def self.stop(msg=false)
+    EventMachine.stop
+    puts
+    puts msg if msg
+  end
+
+end

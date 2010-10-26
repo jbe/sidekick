@@ -1,25 +1,26 @@
 
 
-module Sidekick::Triggers
+require 'em-dir-watcher'
 
-  # registers a class conforming to the sidekick
-  # trigger class api
-  def self.register_class(keyword, kls)
-    register(keyword) do |*prms|
-      o = kls.new(*prms)
-      freq = o.respond_to?(:poll_freq) ? o.poll_freq : 1
-      timeshare(freq) { o.poll } if o.respond_to? :poll
-    end
-  end
+
+module Sidekick::Triggers
 
   # default triggers
 
-  require 'sidekick/triggers/watch'
+  register :watch do |callback, glob|
+    EMDirWatcher.watch(
+      File.expand_path('.'),
+      :include_only => [glob],
+      :grace_period => 0.2,
+      ) do |paths|
+        log "watch #{paths.inspect}"
+        callback.call(paths)
+      end
+  end
 
-  register_class(:watch, Watch)
-  
   register :every do |callback, duration|
-    timeshare(duration) do
+    EventMachine::PeriodicTimer.new(duration) do
+      log "every #{duration} seconds"
       callback.call
     end
   end

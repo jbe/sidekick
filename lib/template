@@ -2,7 +2,7 @@
 
 
 
-abort "A new .sidekick file was generated -- now you just have to edit it."
+stop "A new .sidekick file was generated -- now you just have to edit it."
 
 
 # now delete the above, and set up some actions.

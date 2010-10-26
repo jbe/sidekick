@@ -6,7 +6,7 @@
 
 # watch '**/*.rb' {|paths| log 'made edits' }
 
-# every(20) { notify sh 'fortune' }
+every(5) { notify sh 'fortune' }
 
 auto_compile 'test/fixtures/*.haml', 'test/output/:name.html'
 

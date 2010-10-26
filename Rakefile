@@ -6,11 +6,13 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "sidekick"
     gem.summary = %Q{Automatically run common development tasks on events, as defined by a local .sidekick file.}
-    gem.description = %Q{Automatically run common development tasks on events, as defined by a local .sidekick file. Easy, powerful dsl. Several pre-defined triggers. Helper methods for common tasks. Easy to extend with new triggers and helpers.}
+    gem.description = %Q{Automatically run common development tasks on events, as defined by a local .sidekick file. Easy, powerful dsl including useful pre-defined triggers and helper methods for common tasks. Powered by EventMachine and easy to extend.}
     gem.email = "post@jostein.be"
     gem.homepage = "http://github.com/jbe/sidekick"
     gem.authors = ["Jostein Berre Eliassen,"]
     gem.add_dependency "tilt", ">= 1"
+    gem.add_dependency "eventmachine", ">= 0"
+    gem.add_dependency "em-dir-watcher", ">= 0"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
