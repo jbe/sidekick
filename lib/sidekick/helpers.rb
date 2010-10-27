@@ -23,7 +23,7 @@ module Sidekick::Helpers
   # notifications
 
   def notify(message, title='Sidekick')
-    
+
     gems = {:linux => 'libnotify', :darwin => 'growl'}
 
     stop('Notifications not supported.') unless platform_load?(
@@ -62,6 +62,7 @@ module Sidekick::Helpers
             log "render #{file} => #{t}"
           rescue Exception => e
             notify "Error in #{file}:\n#{e}"
+            log    "Error in #{file}:\n#{e}"
           end
         end
       end
