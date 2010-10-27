@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "sidekick"
     gem.summary = %Q{Automatically run common development tasks on events, as defined by a local .sidekick file.}
-    gem.description = %Q{Automatically run common development tasks on events, as defined by a local .sidekick file. Easy, powerful dsl including useful pre-defined triggers and helper methods for common tasks. Powered by EventMachine and easy to extend.}
+    gem.description = %Q{Automatically run common development tasks on events, as defined by a local .sidekick file. Easy, powerful DSL. Powered by EventMachine. Easy to extend.}
     gem.email = "post@jostein.be"
     gem.homepage = "http://github.com/jbe/sidekick"
     gem.authors = ["Jostein Berre Eliassen,"]
