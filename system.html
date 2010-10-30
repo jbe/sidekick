@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>system.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+        <a class="source" href="sidekick.html">sidekick.rb</a>
+        <a class="source" href="compile.html">compile.rb</a>
+        <a class="source" href="passenger.html">passenger.rb</a>
+        <a class="source" href="shell.html">shell.rb</a>
+        <a class="source" href="sidekick.html">sidekick.rb</a>
+        <a class="source" href="system.html">system.rb</a>
+        <a class="source" href="user_interaction.html">user_interaction.rb</a>
+        <a class="source" href="triggers.html">triggers.rb</a>
+        </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>system.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-1">#</a>
+        </div>
+        
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;rbconfig&#39;</span>
+
+
+
+<span class="k">module</span> <span class="nn">Sidekick::Helpers::System</span>
+  <span class="k">def</span> <span class="nf">platform</span>
+    <span class="p">{</span>
+      <span class="ss">:linux</span> <span class="o">=&gt;</span> <span class="sr">/linux/</span><span class="p">,</span>
+      <span class="ss">:darwin</span> <span class="o">=&gt;</span> <span class="sr">/darwin/</span><span class="p">,</span>
+      <span class="ss">:windows</span> <span class="o">=&gt;</span> <span class="sr">/mswin|mingw|cygwin/</span>
+    <span class="p">}</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">platform</span><span class="p">,</span> <span class="n">regex</span><span class="o">|</span>
+      <span class="k">return</span> <span class="n">platform</span> <span class="k">if</span> <span class="no">Config</span><span class="o">::</span><span class="no">CONFIG</span><span class="o">[</span><span class="s1">&#39;host_os&#39;</span><span class="o">]</span> <span class="o">=~</span> <span class="n">regex</span>
+    <span class="k">end</span><span class="p">;</span> <span class="ss">:other</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">gem_load?</span><span class="p">(</span><span class="n">gemname</span><span class="p">)</span>
+    <span class="k">begin</span>
+      <span class="nb">require</span> <span class="n">gemname</span>
+      <span class="kp">true</span>
+    <span class="k">rescue</span> <span class="no">LoadError</span><span class="p">;</span> <span class="kp">false</span><span class="p">;</span> <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">needs</span><span class="p">(</span><span class="n">gem_name</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+    <span class="k">unless</span> <span class="n">gem_load?</span><span class="p">(</span><span class="n">gem_name</span><span class="p">)</span>
+      <span class="o">::</span><span class="no">Sidekick</span><span class="o">.</span><span class="n">stop</span> <span class="s2">&quot;You must install the </span><span class="si">#{</span><span class="n">gem_name</span><span class="si">}</span><span class="s2"> gem </span><span class="si">#{</span><span class="n">reason</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">prefers</span><span class="p">(</span><span class="n">gem_name</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+    <span class="k">unless</span> <span class="n">gem_load?</span><span class="p">(</span><span class="n">gem_name</span><span class="p">)</span>
+      <span class="n">log</span> <span class="s2">&quot;Please install the </span><span class="si">#{</span><span class="n">gem_name</span><span class="si">}</span><span class="s2"> gem </span><span class="si">#{</span><span class="n">reason</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    </table>
+</div>
+</body>

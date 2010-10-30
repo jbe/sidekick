@@ -13,8 +13,12 @@
     <div id="jump_wrapper">
       <div id="jump_page">
         <a class="source" href="sidekick.html">sidekick.rb</a>
-        <a class="source" href="helpers.html">helpers.rb</a>
-        <a class="source" href="util.html">util.rb</a>
+        <a class="source" href="compile.html">compile.rb</a>
+        <a class="source" href="passenger.html">passenger.rb</a>
+        <a class="source" href="shell.html">shell.rb</a>
+        <a class="source" href="sidekick.html">sidekick.rb</a>
+        <a class="source" href="system.html">system.rb</a>
+        <a class="source" href="user_interaction.html">user_interaction.rb</a>
         <a class="source" href="triggers.html">triggers.rb</a>
         </div>
     </div>
@@ -32,7 +36,7 @@
         <div class="octowrap">
           <a class="octothorpe" href="#section-1">#</a>
         </div>
-        <p> <em>Sidekick</em> is a simple event driven background assistant. Among other things, you can use it to automatically compile assets, test code, restart servers and so on &ndash; as prescribed per project, in a <code>.sidekick</code> file. It is powered by EventMachine and Tilt.</p>
+        <p> <em>Sidekick</em> is a simple event driven background assistant. Among other things, you can use it to automatically compile assets, test code, restart servers and so on &ndash; as prescribed per project, in a <code>.sidekick</code> file. It is powered by <a href="http://github.com/eventmachine/eventmachine">EventMachine</a> and <a href="http://github.com/rtomayko/tilt">Tilt</a>.</p>
 
 <p> This is the annotated source code. See the <a href="http://github.com/jbe/sidekick#readme">README</a> too.</p>
 
@@ -60,9 +64,9 @@
 
 <p> New triggers can be defined by calling <code>Sidekick::Triggers.register(:trigger_name) { ... }</code>.</p>
 
-<p>Basically, the job of a trigger definition is to take the parameters and the block from a call in <code>.sidekick</code> and use it to hook into EventMachine in some way. &mdash; Just have a look at the <a href="http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb">default trigger library</a>.</p>
+<p>Basically, the job of a trigger definition is to take the parameters and the block from a directive in the <code>.sidekick</code> file, and then hook into EventMachine in some way to set up the trigger. &mdash; Just have a look at the <a href="http://jbe.github.com/sidekick/triggers.html">default trigger library</a>.</p>
 
-<p> By using Ruby&rsquo;s <code>method_missing</code>, we can forward method calls to the registered trigger definitions. Any module can thereby extend the <code>Triggers</code> module in order to expose the defined triggers as if they were methods.</p>
+<p> By using Ruby&rsquo;s <code>method_missing</code>, we can forward method calls to the registered trigger definitions. Any module can thereby extend the <code>Sidekick::Triggers</code> module in order to expose the defined triggers as if they were methods.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="k">module</span> <span class="nn">Triggers</span>
@@ -93,11 +97,19 @@
         <div class="octowrap">
           <a class="octothorpe" href="#section-3">#</a>
         </div>
-        <p> A default library of triggers and helpers is included..</p>
+        <p> This part includes the default trigger definitions and helper methods. <code>Sidekick::Helpers</code> automagically loads the code in <code>sidekick/helpers</code> and then includes its sub-modules.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="nb">require</span> <span class="s1">&#39;sidekick/triggers&#39;</span>
-  <span class="nb">require</span> <span class="s1">&#39;sidekick/helpers&#39;</span></pre></div>
+        <div class='highlight'><pre>  <span class="k">module</span> <span class="nn">Sidekick::Helpers</span>
+    <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/sidekick/helpers/**.rb&#39;</span>
+      <span class="o">].</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">path</span><span class="o">|</span> <span class="nb">load</span> <span class="n">path</span> <span class="p">}</span>
+
+    <span class="nb">constants</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+      <span class="kp">include</span> <span class="nb">const_get</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="k">if</span> <span class="nb">const_get</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="no">Module</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="nb">require</span> <span class="s1">&#39;sidekick/triggers&#39;</span></pre></div>
       </td>
     </tr>
     <tr id='section-4'>
@@ -105,7 +117,7 @@
         <div class="octowrap">
           <a class="octothorpe" href="#section-4">#</a>
         </div>
-        <p> The <code>.sidekick</code> file is evaluated in a <code>Sidekick::Context</code> module, which exposes DSL style methods by extending <code>Sidekick::Triggers</code> and <code>Sidekick::Helpers</code>.</p>
+        <p> The <code>.sidekick</code> file is evaluated in the <code>Sidekick::Context</code> module, which exposes DSL style methods by extending <code>Sidekick::Triggers</code> and <code>Sidekick::Helpers</code>.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="no">Context</span> <span class="o">=</span> <span class="no">Module</span><span class="o">.</span><span class="n">new</span>
@@ -118,7 +130,7 @@
         <div class="octowrap">
           <a class="octothorpe" href="#section-5">#</a>
         </div>
-        <p> The <code>Sidekick.run!</code> method reads and applies the <code>.sidekick</code> file, wrapping the setup phase inside <code>EM.run { .. }</code>, and thus begins the event loop.</p>
+        <p> <code>Sidekick.run!</code> reads and applies the <code>.sidekick</code> file, wrapping the setup phase inside <code>EM.run { .. }</code>, thus starting the event loop.</p>
 
       </td>
       <td class=code>
@@ -142,7 +154,7 @@
     <span class="k">end</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">stop</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="kp">false</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">stop</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
     <span class="no">EventMachine</span><span class="o">.</span><span class="n">stop</span>
     <span class="nb">puts</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">msg</span>
   <span class="k">end</span>

@@ -13,8 +13,12 @@
     <div id="jump_wrapper">
       <div id="jump_page">
         <a class="source" href="sidekick.html">sidekick.rb</a>
-        <a class="source" href="helpers.html">helpers.rb</a>
-        <a class="source" href="util.html">util.rb</a>
+        <a class="source" href="compile.html">compile.rb</a>
+        <a class="source" href="passenger.html">passenger.rb</a>
+        <a class="source" href="shell.html">shell.rb</a>
+        <a class="source" href="sidekick.html">sidekick.rb</a>
+        <a class="source" href="system.html">system.rb</a>
+        <a class="source" href="user_interaction.html">user_interaction.rb</a>
         <a class="source" href="triggers.html">triggers.rb</a>
         </div>
     </div>
@@ -33,24 +37,16 @@
           <a class="octothorpe" href="#section-1">#</a>
         </div>
         
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;em-dir-watcher&#39;</span>
-
-
-<span class="k">module</span> <span class="nn">Sidekick::Triggers</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-2'>
-      <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-2">#</a>
-        </div>
-        <p> default triggers</p>
 
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">register</span> <span class="ss">:watch</span> <span class="k">do</span> <span class="o">|</span><span class="n">callback</span><span class="p">,</span> <span class="n">glob</span><span class="o">|</span>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Triggers</span>
+
+  <span class="kp">extend</span> <span class="o">::</span><span class="no">Sidekick</span><span class="o">::</span><span class="no">Helpers</span>
+
+  <span class="n">register</span> <span class="ss">:watch</span> <span class="k">do</span> <span class="o">|</span><span class="n">callback</span><span class="p">,</span> <span class="n">glob</span><span class="o">|</span>
+    <span class="n">needs</span> <span class="s1">&#39;em-dir-watcher&#39;</span><span class="p">,</span> <span class="s1">&#39;to watch file changes&#39;</span>
+
     <span class="no">EMDirWatcher</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span>
       <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
       <span class="ss">:include_only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">glob</span><span class="o">]</span><span class="p">,</span>
