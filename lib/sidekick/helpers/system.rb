@@ -23,7 +23,7 @@ module Sidekick::Helpers::System
 
   def needs(gem_name, reason)
     unless gem_load?(gem_name)
-      ::Sidekick.stop "You must install the #{gem_name} gem #{reason}."
+      abort "You must install the #{gem_name} gem #{reason}."
     end
   end
 
