@@ -1,4 +1,3 @@
-require 'tilt'
 
 
 module Sidekick::Helpers

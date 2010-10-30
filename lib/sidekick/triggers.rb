@@ -1,13 +1,10 @@
 
 
-require 'em-dir-watcher'
-
-
 module Sidekick::Triggers
 
-  # default triggers
-
   register :watch do |callback, glob|
+    needs 'em-dir-watcher', 'to watch file changes'
+
     EMDirWatcher.watch(
       File.expand_path('.'),
       :include_only => [glob],

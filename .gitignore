@@ -18,5 +18,6 @@ coverage
 rdoc
 pkg
 test/output
+sidekick.gemspec
 
 ## PROJECT::SPECIFIC
