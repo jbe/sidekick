@@ -44,9 +44,15 @@ module Sidekick
 
   end
 
-  # Standard libraries of triggers and helpers are included.
+  # This part includes the default trigger definitions and helper methods. `Sidekick::Helpers` automagically loads the code in `sidekick/helpers` and then includes all sub-modules.
   require 'sidekick/triggers'
-  require 'sidekick/helpers'
+
+  module Sidekick::Helpers
+    Dir['sidekick/helpers/**.rb'].each{|path| load path }
+    constants.each do |name|
+      include const_get(name) if const_get(name).is_a?(Module)
+    end
+  end
 
   # The `.sidekick` file is evaluated in the `Sidekick::Context` module, which exposes DSL style methods by extending `Sidekick::Triggers` and `Sidekick::Helpers`.
   Context = Module.new
