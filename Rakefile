@@ -48,6 +48,7 @@ task :doc => :docs
 
 # GITHUB PAGES ===============================================================
 
+
 desc 'Update gh-pages branch'
 task :pages => ['annotated/.git', :docs] do
   rev = `git rev-parse --short HEAD`.strip
@@ -60,3 +61,13 @@ task :pages => ['annotated/.git', :docs] do
       end
     end
   end
+end
+
+# Update the pages/ directory clone
+file 'annotated/.git' => ['annotated/', '.git/refs/heads/gh-pages'] do |f|
+  sh "cd annotated && git init -q && git remote add o ../.git" if !File.exist?(f.name)
+  sh "cd annotated && git fetch -q o && git reset -q --hard o/gh-pages && touch ."
+end
+CLOBBER.include 'annotated/.git'
+
+
