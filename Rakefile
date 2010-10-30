@@ -36,39 +36,17 @@ require 'rocco/tasks'
 Rocco::make 'annotated/'
 
 desc 'Build rocco docs'
-task :docs => [:rocco, 'annotated/index.html']
+task :docs => [:rocco, 'website/index.html']
 directory 'annotated/'
 
 # Make index.html a copy of rocco.html
-file 'annotated/index.html' => 'annotated/sidekick.html' do |f|
-  cp 'annotated/sidekick.html', 'annotated/index.html', :preserve => true
+file 'website/index.html' => 'website/sidekick.html' do |f|
+  cp 'website/sidekick.html', 'website/index.html', :preserve => true
 end
 
-CLEAN.include 'annotated/index.html'
+CLEAN.include 'website/index.html'
 task :doc => :docs
 
 # GITHUB PAGES ===============================================================
-
-
-desc 'Update gh-pages branch'
-task :pages => ['annotated/.git', :docs] do
-  rev = `git rev-parse --short HEAD`.strip
-  Dir.chdir 'annotated' do
-    sh "git add *.html"
-    sh "git commit -m 'rebuild pages from #{rev}'" do |ok,res|
-      if ok
-        verbose { puts "gh-pages updated" }
-        sh "git push -q o HEAD:gh-pages"
-      end
-    end
-  end
-end
-
-# Update the pages/ directory clone
-file 'annotated/.git' => ['annotated/', '.git/refs/heads/gh-pages'] do |f|
-  puts `cd annotated && git init -q && git remote add o ../.git` if !File.exist?(f.name)
-  puts `cd annotated && git fetch -q o && git reset -q --hard o/gh-pages && touch .`
-end
-CLOBBER.include 'annotated/.git'
 
 
