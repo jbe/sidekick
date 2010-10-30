@@ -1,30 +1,47 @@
 h1. Sidekick
 
-
 "Sidekick":http://ibuildlegobricks.tumblr.com/post/1398895151/automate-common-tasks-with-sidekick is a command line tool to automatically trigger actions on certain events, as defined per project, in a local @.sidekick@ file in your project folder.
 
-h3. Use cases
+<pre>
+<code>
+  # .sidekick:
+
+  watch('**/*.rb') { restart_passenger }
+
+  auto_compile 'assets/*.sass', 'public/:name.css'
+
+  every(10) { notify sh 'fortune' }
+</pre>
+</code>
+
+Then just run @sidekick@ in your terminal.
+
+h3. Sample use cases
 
 * Restart server when code is changed
-* Compile Sass and CoffeeScript templates when they are updated
+* Auto-compile Sass or CoffeeScript templates (and many other languages)
 * Periodically run commands
-* Continuous testing, with notifications and flexible hooks
-
-You typically run Sidekick in the background to automate this while coding.
+* Continuous testing, notifications, hooks, you name it
 
 h3. Features
 
-* Simple and powerful DSL ("examples":http://github.com/jbe/sidekick/blob/master/lib/template).
+* Simple and powerful DSL
 * Easy to extend
-* Compiles many languages, thanks to "Tilt":http://github.com/rtomayko/tilt.
+* Compiles many formats, thanks to "Tilt":http://github.com/rtomayko/tilt.
 * Powered by "EventMachine":http://github.com/eventmachine/eventmachine
-* Short "core library":http://github.com/jbe/sidekick/blob/master/lib/sidekick.rb -- about 70 lines of code.
+* The core is about 60 lines of code
+
+You should "read the annotated source code":http://github.com/jbe/sidekick/tree/master/annotated/lib/sidekick.html.
 
 h2. Basic usage
 
-Install with @gem install sidekick@ and invoke using the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
+Install with @gem install sidekick@ and invoke the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
 
-Read the source to see all available "triggers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb and "helpers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/helpers.rb.
+For now, look to the source code to see all available
+
+* "triggers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb
+
+*"helpers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/helpers.rb.
 
 h2. Writing extensions
 
@@ -47,14 +64,9 @@ They will be available to other helpers and to @.sidekick@ files. When adding a 
 
 h3. Writing new triggers
 
-Have a look at the "existing triggers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb, and you will get the idea. Basically, you define new triggers by calling @Sidekick::Triggers.register(:trigger_name) { .. }@, and hooking into EventMachine the same way as in @EM.run { .. }@.
+Have a look at the "existing triggers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb, and you will get the idea. Basically, you define new triggers by calling @Sidekick::Triggers.register(:trigger_name) { .. }@, and hooking into EventMachine the same way as in @EM.run { .. }@ from there.
 
 You can keep your extensions in the @.sidekick@ file itself, or package them in gems, or (better) ask me to merge them into the main repository.
-
-h3. Similar projects:
-
-* "Guard":http://github.com/guard/guard
-
 
 h3. Copyright
 
