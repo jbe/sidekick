@@ -25,7 +25,7 @@ h3. Features
 * Powered by "EventMachine":http://github.com/eventmachine/eventmachine
 * The core is about 60 lines of code
 
-You should "read the annotated source code":http://jbe.github.com/sidekick/
+You should "read the annotated source code":http://jbe.github.com/sidekick/.
 
 h2. Basic usage
 
