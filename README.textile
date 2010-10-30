@@ -57,6 +57,7 @@ They will be available to other helpers and to @.sidekick@ files. When adding a 
 
 
 h3. Writing new triggers
+
 Have a look at the "existing triggers":http://jbe.github.com/sidekick/triggers.html, and you will get the idea. Basically, you define new triggers by calling @Sidekick::Triggers.register(:trigger_name) { .. }@, and hooking into EventMachine the same way as in @EM.run { .. }@ from there.
 
 You can keep your extensions in the @.sidekick@ file itself, or package them in gems, or (better) ask me to merge them into the main repository.
