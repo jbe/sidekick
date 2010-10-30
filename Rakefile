@@ -19,29 +19,6 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
-
-begin
-  require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |test|
-    test.libs << 'test'
-    test.pattern = 'test/**/test_*.rb'
-    test.verbose = true
-  end
-rescue LoadError
-  task :rcov do
-    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
-  end
-end
-
-task :test => :check_dependencies
-
-task :default => :test
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
@@ -52,3 +29,34 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+
+require 'rocco/tasks'
+Rocco::make 'annotated/'
+
+desc 'Build rocco docs'
+task :docs => [:rocco, 'annotated/index.html']
+directory 'annotated/'
+
+# Make index.html a copy of rocco.html
+file 'annotated/index.html' => 'annotated/sidekick.html' do |f|
+  cp 'annotated/sidekick.html', 'annotated/index.html', :preserve => true
+end
+
+CLEAN.include 'annotated/index.html'
+task :doc => :docs
+
+# GITHUB PAGES ===============================================================
+
+desc 'Update gh-pages branch'
+task :pages => ['annotated/.git', :docs] do
+  rev = `git rev-parse --short HEAD`.strip
+  Dir.chdir 'annotated' do
+    sh "git add *.html"
+    sh "git commit -m 'rebuild pages from #{rev}'" do |ok,res|
+      if ok
+        verbose { puts "gh-pages updated" }
+        sh "git push -q o HEAD:gh-pages"
+      end
+    end
+  end
