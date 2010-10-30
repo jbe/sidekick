@@ -1,4 +1,4 @@
-# *Sidekick* is a simple event driven background assistant. Among other things, you can use it to automatically compile assets, test code, restart servers and so on - as prescribed per project, in a `.sidekick` file. It is powered by EventMachine and Tilt.
+# *Sidekick* is a simple event driven background assistant. Among other things, you can use it to automatically compile assets, test code, restart servers and so on - as prescribed per project, in a `.sidekick` file. It is powered by [EventMachine](http://github.com/eventmachine/eventmachine) and [Tilt](http://github.com/rtomayko/tilt).
 #
 # This is the annotated source code. See the [README](http://github.com/jbe/sidekick#readme) too.
 #
@@ -19,9 +19,9 @@ module Sidekick
   #
   # New triggers can be defined by calling `Sidekick::Triggers.register(:trigger_name) { ... }`.
   #
-  #Basically, the job of a trigger definition is to take the parameters and the block from a call in `.sidekick` and use it to hook into EventMachine in some way. -- Just have a look at the [default trigger library](http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb).
+  #Basically, the job of a trigger definition is to take the parameters and the block from a directive in the `.sidekick` file, and then hook into EventMachine in some way to set up the trigger. -- Just have a look at the [default trigger library](http://jbe.github.com/sidekick/triggers.html).
   #
-  # By using Ruby's `method_missing`, we can forward method calls to the registered trigger definitions. Any module can thereby extend the `Triggers` module in order to expose the defined triggers as if they were methods.
+  # By using Ruby's `method_missing`, we can forward method calls to the registered trigger definitions. Any module can thereby extend the `Sidekick::Triggers` module in order to expose the defined triggers as if they were methods.
   module Triggers
     @@triggers = {}
 
@@ -44,18 +44,18 @@ module Sidekick
 
   end
 
-  # A default library of triggers and helpers is included..
+  # Standard libraries of triggers and helpers are included.
   require 'sidekick/triggers'
   require 'sidekick/helpers'
 
-  # The `.sidekick` file is evaluated in a `Sidekick::Context` module, which exposes DSL style methods by extending `Sidekick::Triggers` and `Sidekick::Helpers`.
+  # The `.sidekick` file is evaluated in the `Sidekick::Context` module, which exposes DSL style methods by extending `Sidekick::Triggers` and `Sidekick::Helpers`.
   Context = Module.new
   Context.extend Triggers
   Context.extend Helpers
 
 
 
-  # The `Sidekick.run!` method reads and applies the `.sidekick` file, wrapping the setup phase inside `EM.run { .. }`, and thus begins the event loop.
+  # `Sidekick.run!` reads and applies the `.sidekick` file, wrapping the setup phase inside `EM.run { .. }`, thus starting the event loop.
   def self.run!(path='.sidekick')
     ensure_config_exists(path)
 
@@ -76,7 +76,7 @@ module Sidekick
     end
   end
 
-  def self.stop(msg=false)
+  def self.stop(msg=nil)
     EventMachine.stop
     puts "\n#{msg}" if msg
   end
