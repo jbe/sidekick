@@ -2,6 +2,8 @@
 
 module Sidekick::Triggers
 
+  extend ::Sidekick::Helpers
+
   register :watch do |callback, glob|
     needs 'em-dir-watcher', 'to watch file changes'
 

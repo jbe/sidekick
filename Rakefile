@@ -21,6 +21,7 @@ rescue LoadError
 end
 
 
+=begin
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
@@ -30,12 +31,12 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
-
+=end
 
 require 'rocco/tasks'
 Rocco::make 'annotated/'
 
-desc 'Build rocco docs'
+desc 'Build docco'
 task :docs => [:rocco, 'website/index.html']
 directory 'annotated/'
 

@@ -23,8 +23,8 @@ module Sidekick::Helpers::Compile
     watch(source) do |files|
       files.each do |file|
         if File.exists?(file)
-            compile file, target.gsub(
-              ':name', File.basename(file, '.*'))
+            t = target.gsub(':name', File.basename(file, '.*'))
+            compile file, t
             log "render #{file} => #{t}"
         end
       end

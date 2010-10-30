@@ -1,14 +1,12 @@
 
 
-
-
 stop "A new .sidekick file was generated -- now you just have to edit it."
 
 
 # now delete the above, and set up some actions.
 # here are some samples:
 
-# watch('**/*.rb') { restart_passenger }
+# watch('**.rb') { restart_passenger }
 #
 # auto_compile 'assets/css/*.sass', 'public/css/:name.css'
 #

@@ -2,6 +2,7 @@
 module Sidekick::Helpers::Shell
   def notify(message, title='Sidekick')
 
+    log "### #{title}: #{message}"
     case platform
       when :linux
         needs 'libnotify', 'to display status messages on linux'
@@ -9,9 +10,6 @@ module Sidekick::Helpers::Shell
       when :darwin
         needs 'growl', 'to display status messages on a Mac.'
         Growl.notify message, :title => title, :name => 'Sidekick'
-      else
-        log "### #{title}: #{message}"
     end
-
   end
 end

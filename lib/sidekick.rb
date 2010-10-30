@@ -44,21 +44,23 @@ module Sidekick
 
   end
 
-  # This part includes the default trigger definitions and helper methods. `Sidekick::Helpers` automagically loads the code in `sidekick/helpers` and then includes all sub-modules.
-  require 'sidekick/triggers'
+  # This part includes the default trigger definitions and helper methods. `Sidekick::Helpers` automagically loads the code in `sidekick/helpers` and then includes its sub-modules.
 
   module Sidekick::Helpers
-    Dir['sidekick/helpers/**.rb'].each{|path| load path }
+    Dir[File.dirname(__FILE__) + '/sidekick/helpers/**.rb'
+      ].each {|path| load path }
+
     constants.each do |name|
       include const_get(name) if const_get(name).is_a?(Module)
     end
   end
 
+  require 'sidekick/triggers'
+
   # The `.sidekick` file is evaluated in the `Sidekick::Context` module, which exposes DSL style methods by extending `Sidekick::Triggers` and `Sidekick::Helpers`.
   Context = Module.new
   Context.extend Triggers
   Context.extend Helpers
-
 
 
   # `Sidekick.run!` reads and applies the `.sidekick` file, wrapping the setup phase inside `EM.run { .. }`, thus starting the event loop.
