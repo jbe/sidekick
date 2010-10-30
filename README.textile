@@ -33,9 +33,9 @@ Install with @gem install sidekick@ and invoke the @sidekick@ command in your pr
 
 For now, look to the source code to see all available
 
-* "triggers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb
+* "triggers":http://jbe.github.com/sidekick/triggers.html
 
-* "helpers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/helpers.rb
+* "helpers":http://jbe.github.com/sidekick/helpers.html
 
 h2. Writing extensions
 
