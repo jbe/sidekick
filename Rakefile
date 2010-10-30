@@ -34,11 +34,11 @@ end
 =end
 
 require 'rocco/tasks'
-Rocco::make 'annotated/'
+Rocco::make 'website/'
 
 desc 'Build docco'
 task :docs => [:rocco, 'website/index.html']
-directory 'annotated/'
+directory 'website/'
 
 # Make index.html a copy of rocco.html
 file 'website/index.html' => 'website/sidekick.html' do |f|
@@ -47,7 +47,5 @@ end
 
 CLEAN.include 'website/index.html'
 task :doc => :docs
-
-# GITHUB PAGES ===============================================================
 
 
