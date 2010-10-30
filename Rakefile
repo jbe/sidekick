@@ -37,15 +37,7 @@ require 'rocco/tasks'
 Rocco::make 'website/'
 
 desc 'Build docco'
-task :docs => [:rocco, 'website/index.html']
+task :docs => :rocco
 directory 'website/'
-
-# Make index.html a copy of rocco.html
-file 'website/index.html' => 'website/sidekick.html' do |f|
-  cp 'website/sidekick.html', 'website/index.html', :preserve => true
-end
-
-CLEAN.include 'website/index.html'
-task :doc => :docs
 
 
