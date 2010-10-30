@@ -35,7 +35,7 @@ For now, look to the source code to see all available
 
 * "triggers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/triggers.rb
 
-*"helpers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/helpers.rb.
+* "helpers":http://github.com/jbe/sidekick/blob/master/lib/sidekick/helpers.rb.
 
 h2. Writing extensions
 
