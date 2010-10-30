@@ -35,7 +35,7 @@ For now, look to the source code to see all available
 
 * "triggers":http://jbe.github.com/sidekick/triggers.html
 
-* "helpers":http://jbe.github.com/sidekick/helpers.html
+* "helpers":http://github.com/jbe/sidekick/tree/master/lib/sidekick/helpers/
 
 h2. Writing extensions
 
@@ -53,7 +53,7 @@ To add more helpers, simply add methods to @Sidekick::Helpers@, like this:
 </code>
 </pre>
 
-They will be available to other helpers and to @.sidekick@ files. When adding a group of methods it may be cleaner to write a module under @Sidekick::Helpers@, and then including it.
+They will be available to other helpers and to @.sidekick@ files.
 
 
 h3. Writing new triggers
