@@ -1,20 +1,14 @@
 h1. Sidekick
 
-"Sidekick":http://ibuildlegobricks.tumblr.com/post/1398895151/automate-common-tasks-with-sidekick is a command line tool to automatically trigger actions on certain events, as defined per project, in a local @.sidekick@ file in your project folder.
+"Sidekick":http://ibuildlegobricks.tumblr.com/post/1398895151/automate-common-tasks-with-sidekick is a command line tool to automatically trigger actions on certain events, as defined per project, in a local @.sidekick@ file in your project folder:
 
-<pre>
-<code>
-  # .sidekick:
+<pre><code>
+watch('**/*.rb') { restart_passenger }
 
-  watch('**/*.rb') { restart_passenger }
+auto_compile 'assets/*.sass', 'public/:name.css'
 
-  auto_compile 'assets/*.sass', 'public/:name.css'
-
-  every(10) { notify sh 'fortune' }
-</pre>
-</code>
-
-Then just run @sidekick@ in your terminal.
+every(10) { notify sh 'fortune' }
+</pre></code>
 
 h3. Sample use cases
 
