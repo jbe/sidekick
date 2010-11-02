@@ -44,7 +44,7 @@ module Sidekick
 
   end
 
-  # This part includes the default trigger definitions and helper methods. `Sidekick::Helpers` automagically loads the code in `sidekick/helpers` and then includes its sub-modules.
+  # This part includes the default trigger definitions and helper methods. `Sidekick::Helpers` automagically loads the code in `sidekick/helpers` and then includes its own sub-modules.
 
   module Sidekick::Helpers
     Dir[File.dirname(__FILE__) + '/sidekick/helpers/**.rb'

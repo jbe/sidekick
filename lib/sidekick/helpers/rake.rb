@@ -1,5 +1,5 @@
 
-module Sidekick::Helpers::Compile
+module Sidekick::Helpers::Rake
 
   def rake(task_name)
     needs 'rake', 'to invoke rake tasks'
