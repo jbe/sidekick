@@ -15,6 +15,7 @@
         <a class="source" href="sidekick.html">sidekick.rb</a>
         <a class="source" href="compile.html">compile.rb</a>
         <a class="source" href="passenger.html">passenger.rb</a>
+        <a class="source" href="rake.html">rake.rb</a>
         <a class="source" href="shell.html">shell.rb</a>
         <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
         <a class="source" href="system.html">system.rb</a>
@@ -52,13 +53,10 @@
       <td class=code>
         <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
     <span class="n">needs</span> <span class="s1">&#39;tilt&#39;</span><span class="p">,</span> <span class="s1">&#39;to compile templates&#39;</span>
-
-    <span class="k">begin</span>
+    <span class="n">handling</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">source</span> <span class="k">do</span>
       <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="no">Tilt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">)</span>
       <span class="k">end</span>
-    <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">e</span>
-      <span class="n">notify</span> <span class="s2">&quot;Error compiling </span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">#{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">end</span>
   <span class="k">end</span></pre></div>
       </td>

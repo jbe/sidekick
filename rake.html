@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <title>passenger.rb</title>
+  <title>rake.rb</title>
   <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
 </head>
 <body>
@@ -27,7 +27,7 @@
   <table cellspacing=0 cellpadding=0>
   <thead>
     <tr>
-      <th class=docs><h1>passenger.rb</h1></th>
+      <th class=docs><h1>rake.rb</h1></th>
       <th class=code></th>
     </tr>
   </thead>
@@ -41,13 +41,15 @@
 
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Helpers::Passenger</span>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Helpers::Compile</span>
 
-  <span class="k">def</span> <span class="nf">restart_passenger</span>
-    <span class="no">FileUtils</span><span class="o">.</span><span class="n">touch</span> <span class="s1">&#39;./tmp/restart.txt&#39;</span>
-    <span class="n">log</span> <span class="s1">&#39;restarted passenger&#39;</span>
+  <span class="k">def</span> <span class="nf">rake</span><span class="p">(</span><span class="n">task_name</span><span class="p">)</span>
+    <span class="n">needs</span> <span class="s1">&#39;rake&#39;</span><span class="p">,</span> <span class="s1">&#39;to invoke rake tasks&#39;</span>
+    <span class="n">handling</span> <span class="no">Exception</span><span class="p">,</span> <span class="s2">&quot;rake </span><span class="si">#{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">do</span>
+      <span class="nb">load</span> <span class="s1">&#39;Rakefile&#39;</span>
+      <span class="no">Rake</span><span class="o">::</span><span class="n">application</span><span class="o">[</span><span class="n">task_name</span><span class="o">].</span><span class="n">invoke</span>
+    <span class="k">end</span>
   <span class="k">end</span>
-
 
 <span class="k">end</span></pre></div>
       </td>

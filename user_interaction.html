@@ -15,6 +15,7 @@
         <a class="source" href="sidekick.html">sidekick.rb</a>
         <a class="source" href="compile.html">compile.rb</a>
         <a class="source" href="passenger.html">passenger.rb</a>
+        <a class="source" href="rake.html">rake.rb</a>
         <a class="source" href="shell.html">shell.rb</a>
         <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
         <a class="source" href="system.html">system.rb</a>
@@ -43,7 +44,7 @@
         <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Helpers::UserInteraction</span>
   <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Sidekick&#39;</span><span class="p">)</span>
 
-    <span class="n">log</span> <span class="s2">&quot;### </span><span class="si">#{</span><span class="n">title</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">log</span> <span class="s2">&quot;NOTIFY </span><span class="si">#{</span><span class="n">title</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">case</span> <span class="n">platform</span>
       <span class="k">when</span> <span class="ss">:linux</span>
         <span class="n">needs</span> <span class="s1">&#39;libnotify&#39;</span><span class="p">,</span> <span class="s1">&#39;to display status messages on linux&#39;</span>
