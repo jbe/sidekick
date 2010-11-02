@@ -16,7 +16,7 @@ stop "A new .sidekick file was generated -- now you just have to edit it."
 # watch('**.rb') do |paths|
 #   log 'code change'
 #   restart_passenger
-#   rake 'doc'
+#   rake 'docs'
 # end
 
 
