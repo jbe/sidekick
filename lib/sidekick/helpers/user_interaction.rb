@@ -2,7 +2,7 @@
 module Sidekick::Helpers::UserInteraction
   def notify(message, title='Sidekick')
 
-    log "### #{title}: #{message}"
+    log "NOTIFY #{title}: #{message}"
     case platform
       when :linux
         needs 'libnotify', 'to display status messages on linux'

@@ -1,12 +1,8 @@
-# This is an example sidekick file that i use for testing
-# by doing. Proper tests are welcome.
 
 
+# every(5) { notify sh 'fortune' }
 
-
-# watch '**/*.rb' {|paths| log 'made edits' }
-
-every(5) { notify sh 'fortune' }
+watch('lib/**.rb') { rake 'docs' }
 
 auto_compile 'test/fixtures/*.haml', 'test/output/:name.html'
 

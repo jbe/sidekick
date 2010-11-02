@@ -32,5 +32,17 @@ module Sidekick::Helpers::System
       log "Please install the #{gem_name} gem #{reason}."
     end
   end
+
+  def handling(err_kls=Exception, context=nil)
+    begin
+      yield
+    rescue err_kls => e
+      if context
+        notify "#{context}:\n#{e}", e.class.name
+      else
+        notify "#{e}\n#{e.backtrace[0..2]}", e.class.name
+      end
+    end
+  end
 end
 

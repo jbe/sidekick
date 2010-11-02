@@ -6,13 +6,10 @@ module Sidekick::Helpers::Compile
 
   def compile(source, target)
     needs 'tilt', 'to compile templates'
-
-    begin
+    handling Exception, source do
       File.open(target, 'w') do |f|
         f.write(Tilt.new(source).render)
       end
-    rescue Exception => e
-      notify "Error compiling #{file}:\n#{e}"
     end
   end
 

@@ -3,7 +3,7 @@ h1. Sidekick
 "Sidekick":http://ibuildlegobricks.tumblr.com/post/1398895151/automate-common-tasks-with-sidekick is a command line tool to automatically trigger actions on certain events, as defined per project, in a local @.sidekick@ file in your project folder:
 
 <pre><code>
-watch('**/*.rb') { restart_passenger }
+watch('**/*.rb') { restart_passenger; rake docs }
 
 auto_compile 'assets/*.sass', 'public/:name.css'
 
@@ -14,7 +14,7 @@ h3. Sample use cases
 
 * Restart server when code is changed
 * Auto-compile Sass or CoffeeScript templates (and many other languages)
-* Periodically run commands
+* Periodically run tasks
 * Continuous testing, notifications, hooks, you name it
 
 h3. Features
@@ -23,40 +23,20 @@ h3. Features
 * Easy to extend
 * Compiles many formats, thanks to "Tilt":http://github.com/rtomayko/tilt.
 * Powered by "EventMachine":http://github.com/eventmachine/eventmachine
-* The core is about 60 lines of code
+* Short and sweet codebase - core < 100 loc
 
-You should "read the annotated source code":http://jbe.github.com/sidekick/sidekick.html.
+You can "read the annotated source code":http://jbe.github.com/sidekick/sidekick.html.
 
 h2. Basic usage
 
-Install with @gem install sidekick@ and invoke the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a template.
+Install with @gem install sidekick@ and invoke the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a "template":http://github.com/jbe/sidekick/blob/master/lib/template with plenty of examples.
 
-For now, look to the source code to see all available
+View source:
 
 * "triggers":http://jbe.github.com/sidekick/triggers.html
-
 * "helpers":http://github.com/jbe/sidekick/tree/master/lib/sidekick/helpers/
 
-h2. Writing extensions
-
-h3. Writing new helpers
-
-To add more helpers, simply add methods to @Sidekick::Helpers@, like this:
-
-<pre>
-<code lang='ruby'>
-  module Sidekick::Helpers
-    def make_pickle
-      PickeFactory.manufacture!
-    end
-  end
-</code>
-</pre>
-
-They will be available to other helpers and to @.sidekick@ files.
-
-
-h3. Writing new triggers
+h2. Defining new triggers
 
 Have a look at the "existing triggers":http://jbe.github.com/sidekick/triggers.html, and you will get the idea. Basically, you define new triggers by calling @Sidekick::Triggers.register(:trigger_name) { .. }@, and hooking into EventMachine the same way as in @EM.run { .. }@ from there.
 

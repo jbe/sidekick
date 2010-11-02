@@ -1,20 +1,31 @@
 
-
 stop "A new .sidekick file was generated -- now you just have to edit it."
 
+# Now delete the line above, and set up some actions.
+# Here are some samples:
 
-# now delete the above, and set up some actions.
-# here are some samples:
 
-# watch('**.rb') { restart_passenger }
-#
 # auto_compile 'assets/css/*.sass', 'public/css/:name.css'
-#
+
 # auto_compile 'assets/js/*.coffee', 'public/js/:name.js'
-#
-# every(60) { notify 'You are now one minute older.' }
-#
+
+# every(60*60) { notify 'You are now one hour older.' }
+
 # every(60*15) { notify sh 'fortune' }
+
+# watch('**.rb') do |paths|
+#   log 'code change'
+#   restart_passenger
+#   rake 'doc'
+# end
+
+
+# more sample actions:
+
+# needs 'httparty', 'to look up your location'
+# loc = HTTParty.get('http://ipinfodb.com/ip_query.php')
+# notify "You are in #{loc['Response']['City']}"
+
 
 
 
