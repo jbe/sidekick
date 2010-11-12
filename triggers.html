@@ -19,8 +19,8 @@
         <a class="source" href="shell.html">shell.rb</a>
         <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
         <a class="source" href="system.html">system.rb</a>
-        <a class="source" href="triggers.html">triggers.rb</a>
         <a class="source" href="user_interaction.html">user_interaction.rb</a>
+        <a class="source" href="triggers.html">triggers.rb</a>
         </div>
     </div>
   </div>
@@ -38,24 +38,14 @@
           <a class="octothorpe" href="#section-1">#</a>
         </div>
         
-      </td>
-      <td class=code>
-        <div class='highlight'><pre></pre></div>
-      </td>
-    </tr>
-    <tr id='section-2'>
-      <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-2">#</a>
-        </div>
-        <p> Basically, the job of a trigger definition is to take the parameters and the block from a directive in the <code>.sidekick</code> file, and then hook into EventMachine in some way to set up the trigger.</p>
 
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Actions::Triggers</span>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Triggers</span>
 
+  <span class="kp">extend</span> <span class="o">::</span><span class="no">Sidekick</span><span class="o">::</span><span class="no">Helpers</span>
 
-  <span class="k">def</span> <span class="nf">watch</span><span class="p">(</span><span class="n">glob</span><span class="p">)</span>
+  <span class="n">register</span> <span class="ss">:watch</span> <span class="k">do</span> <span class="o">|</span><span class="n">callback</span><span class="p">,</span> <span class="n">glob</span><span class="o">|</span>
     <span class="n">needs</span> <span class="s1">&#39;em-dir-watcher&#39;</span><span class="p">,</span> <span class="s1">&#39;to watch file changes&#39;</span>
 
     <span class="no">EMDirWatcher</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span>
@@ -63,31 +53,16 @@
       <span class="ss">:include_only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">glob</span><span class="o">]</span><span class="p">,</span>
       <span class="ss">:grace_period</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span>
       <span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">paths</span><span class="o">|</span>
-      <span class="n">log_trigger</span> <span class="s2">&quot;watch </span><span class="si">#{</span><span class="n">paths</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
-      <span class="k">yield</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+      <span class="n">log</span> <span class="s2">&quot;watch </span><span class="si">#{</span><span class="n">paths</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+      <span class="n">callback</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">every</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+  <span class="n">register</span> <span class="ss">:every</span> <span class="k">do</span> <span class="o">|</span><span class="n">callback</span><span class="p">,</span> <span class="n">duration</span><span class="o">|</span>
     <span class="no">EventMachine</span><span class="o">::</span><span class="no">PeriodicTimer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span> <span class="k">do</span>
-      <span class="n">log_trigger</span> <span class="s2">&quot;every </span><span class="si">#{</span><span class="n">duration</span><span class="si">}</span><span class="s2"> seconds&quot;</span>
-      <span class="k">yield</span>
+      <span class="n">log</span> <span class="s2">&quot;every </span><span class="si">#{</span><span class="n">duration</span><span class="si">}</span><span class="s2"> seconds&quot;</span>
+      <span class="n">callback</span><span class="o">.</span><span class="n">call</span>
     <span class="k">end</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">after</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
-    <span class="no">EventMachine</span><span class="o">::</span><span class="no">Timer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span> <span class="k">do</span>
-      <span class="n">log_trigger</span> <span class="s2">&quot;after </span><span class="si">#{</span><span class="n">duration</span><span class="si">}</span><span class="s2"> seconds&quot;</span>
-      <span class="k">yield</span>
-    <span class="k">end</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">on_start</span>
-    <span class="n">after</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">yield</span> <span class="p">}</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="nf">on_stop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
-    <span class="o">::</span><span class="no">Sidekick</span><span class="o">::</span><span class="no">STOP_CALLBACKS</span> <span class="o">&lt;&lt;</span> <span class="n">blk</span>
   <span class="k">end</span>
 
 <span class="k">end</span></pre></div>

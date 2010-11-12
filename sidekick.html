@@ -19,8 +19,8 @@
         <a class="source" href="shell.html">shell.rb</a>
         <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
         <a class="source" href="system.html">system.rb</a>
-        <a class="source" href="triggers.html">triggers.rb</a>
         <a class="source" href="user_interaction.html">user_interaction.rb</a>
+        <a class="source" href="triggers.html">triggers.rb</a>
         </div>
     </div>
   </div>
@@ -43,18 +43,66 @@
 
 <hr />
 
-<p> The default trigger definitions and helper methods &mdash; commonly referred to as actions &mdash; are automagically required and included from <code>lib/sidekick/actions/**.rb</code>.</p>
+<p> Sidekick basically helps you do two things:</p>
 
+<p> &mdash; <em>Define</em> named triggers, such as saying that <code>watch(glob)</code> means doing something when a file matching <code>glob</code> changes, or that <code>every(duration)</code> means doing something every <code>duration</code> seconds.</p>
+
+<p> &mdash; <em>Use</em> the defined triggers with callbacks, such as <code>watch(**.rb) { notify 'Code change' }</code></p>
       </td>
       <td class=code>
         <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;fileutils&#39;</span>
 <span class="nb">require</span> <span class="s1">&#39;eventmachine&#39;</span>
 
-<span class="k">module</span> <span class="nn">Sidekick</span>
+<span class="k">module</span> <span class="nn">Sidekick</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-2">#</a>
+        </div>
+        <p> This core functionality is provided by <code>Sidekick::Triggers</code>.</p>
 
-  <span class="k">module</span> <span class="nn">Sidekick::Actions</span>
-    <span class="no">Dir</span><span class="o">[</span>
-      <span class="no">File</span><span class="o">.</span><span class="n">join</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">),</span> <span class="o">*</span><span class="sx">%w{sidekick actions **.rb}</span>
+<p> New triggers can be defined by calling <code>Sidekick::Triggers.register(:trigger_name) { ... }</code>.</p>
+
+<p>Basically, the job of a trigger definition is to take the parameters and the block from a directive in the <code>.sidekick</code> file, and then hook into EventMachine in some way to set up the trigger. &mdash; Just have a look at the <a href="http://jbe.github.com/sidekick/triggers.html">default trigger library</a>.</p>
+
+<p> By using Ruby&rsquo;s <code>method_missing</code>, we can forward method calls to the registered trigger definitions. Any module can thereby extend the <code>Sidekick::Triggers</code> module in order to expose the defined triggers as if they were methods.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">module</span> <span class="nn">Triggers</span>
+    <span class="vc">@@triggers</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+      <span class="vc">@@triggers</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">block</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">log</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1"># used by triggers</span>
+      <span class="nb">puts</span> <span class="n">str</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">blk</span><span class="p">)</span>
+      <span class="vc">@@triggers</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="p">?</span>
+        <span class="vc">@@triggers</span><span class="o">[</span><span class="nb">name</span><span class="o">].</span><span class="n">call</span><span class="p">(</span><span class="n">blk</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="p">:</span> <span class="k">super</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">respond_to?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+      <span class="k">super</span> <span class="o">||</span> <span class="o">!!</span><span class="vc">@@triggers</span><span class="o">[</span><span class="nb">method</span><span class="o">]</span>
+    <span class="k">end</span>
+
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-3">#</a>
+        </div>
+        <p> This part includes the default trigger definitions and helper methods. <code>Sidekick::Helpers</code> automagically loads the code in <code>sidekick/helpers</code> and then includes its own sub-modules.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">module</span> <span class="nn">Sidekick::Helpers</span>
+    <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/sidekick/helpers/**.rb&#39;</span>
       <span class="o">].</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">path</span><span class="o">|</span> <span class="nb">load</span> <span class="n">path</span> <span class="p">}</span>
 
     <span class="nb">constants</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
@@ -62,34 +110,52 @@
     <span class="k">end</span>
   <span class="k">end</span>
 
-  <span class="no">STOP_CALLBACKS</span> <span class="o">=</span> <span class="o">[]</span> <span class="c1"># called on shutdown</span>
+  <span class="nb">require</span> <span class="s1">&#39;sidekick/triggers&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-4">#</a>
+        </div>
+        <p> The <code>.sidekick</code> file is evaluated in the <code>Sidekick::Context</code> module, which exposes DSL style methods by extending <code>Sidekick::Triggers</code> and <code>Sidekick::Helpers</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="no">Context</span> <span class="o">=</span> <span class="no">Module</span><span class="o">.</span><span class="n">new</span>
+  <span class="no">Context</span><span class="o">.</span><span class="n">extend</span> <span class="no">Triggers</span>
+  <span class="no">Context</span><span class="o">.</span><span class="n">extend</span> <span class="no">Helpers</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-5">#</a>
+        </div>
+        <p> <code>Sidekick.run!</code> reads and applies the <code>.sidekick</code> file, wrapping the setup phase inside <code>EM.run { .. }</code>, thus starting the event loop.</p>
 
-  <span class="no">Context</span> <span class="o">=</span> <span class="no">Module</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="no">Actions</span><span class="p">)</span>
-
-  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run!</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;.sidekick&#39;</span><span class="p">)</span>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">run!</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;.sidekick&#39;</span><span class="p">)</span>
     <span class="n">ensure_config_exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
     <span class="no">Signal</span><span class="o">.</span><span class="n">trap</span><span class="p">(</span><span class="ss">:INT</span><span class="p">)</span> <span class="p">{</span> <span class="n">stop</span> <span class="p">}</span>
 
     <span class="no">EventMachine</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span>
       <span class="no">Context</span><span class="o">.</span><span class="n">module_eval</span><span class="p">(</span>
-        <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">},</span>
-        <span class="n">path</span>
-        <span class="p">)</span>
+        <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">},</span> <span class="n">path</span> <span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">ensure_config_exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-      <span class="nb">puts</span> <span class="s2">&quot;Generate </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">? (Y/n)&quot;</span>
-      <span class="no">STDIN</span><span class="o">.</span><span class="n">gets</span> <span class="o">=~</span> <span class="sr">/^N|n/</span> <span class="p">?</span> <span class="nb">exit</span> <span class="p">:</span>
+      <span class="nb">puts</span> <span class="s1">&#39;Generate new sidekick file? (Y/n)&#39;</span>
+      <span class="nb">gets</span> <span class="o">=~</span> <span class="sr">/^N|n/</span> <span class="p">?</span> <span class="nb">exit</span> <span class="p">:</span>
         <span class="no">FileUtils</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../template&#39;</span><span class="p">,</span>
           <span class="bp">__FILE__</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">stop</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
-    <span class="no">STOP_CALLBACKS</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">c</span><span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">call</span> <span class="p">}</span>
     <span class="no">EventMachine</span><span class="o">.</span><span class="n">stop</span>
     <span class="nb">puts</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">msg</span>
   <span class="k">end</span>
