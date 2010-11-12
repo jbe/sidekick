@@ -30,8 +30,8 @@ module Sidekick::Actions::Triggers
     end
   end
 
-  def on_start
-    after(0) { yield }
+  def on_start(&blk)
+    after(0, &blk)
   end
 
   def on_stop(&blk)
