@@ -10,4 +10,4 @@ end
 puts '                       ^  ^  ^  ^    '
 puts ' == SIDEKICK ==    ^ ctrl-c to exit ^'
 puts '                                     '
-Sidekick.run!
+Sidekick.run!( ARGV.first || '.sidekick' )

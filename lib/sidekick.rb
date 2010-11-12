@@ -77,7 +77,7 @@ module Sidekick
 
   def self.ensure_config_exists(path)
     unless File.exists?(path)
-      puts 'Generate new sidekick file? (Y/n)'
+      puts 'Generate #{path}? (Y/n)'
       gets =~ /^N|n/ ? exit :
         FileUtils.cp(File.expand_path('../template',
           __FILE__), path)
