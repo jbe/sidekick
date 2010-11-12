@@ -1,5 +1,5 @@
 
-module Sidekick::Helpers::Shell
+module Sidekick::Actions::Shell
 
   def sh(cmd)
     log cmd; `#{cmd}`

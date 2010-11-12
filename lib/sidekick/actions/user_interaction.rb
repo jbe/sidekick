@@ -1,5 +1,5 @@
 
-module Sidekick::Helpers::UserInteraction
+module Sidekick::Actions::UserInteraction
   def notify(message, title='Sidekick')
 
     log "NOTIFY #{title}: #{message}"

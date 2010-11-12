@@ -3,7 +3,7 @@ require 'rbconfig'
 
 
 
-module Sidekick::Helpers::System
+module Sidekick::Actions::System
   def platform
     {
       :linux => /linux/,

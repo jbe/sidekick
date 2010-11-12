@@ -1,6 +1,9 @@
 
+on_start { notify 'started..' }
 
-# every(5) { notify sh 'fortune' }
+on_stop { notify 'stopped..' }
+
+after(5) { notify sh 'fortune' }
 
 watch('lib/**.rb') { rake 'docs' }
 
@@ -9,5 +12,7 @@ auto_compile 'test/fixtures/*.haml', 'test/output/:name.html'
 auto_compile 'test/fixtures/*.sass', 'test/output/:name.css'
 
 auto_compile 'test/fixtures/*.coffee', 'test/output/:name.js'
+
+passenger_server 3002
 
 # vim:ft=ruby

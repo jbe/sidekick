@@ -23,7 +23,7 @@ h3. Features
 * Easy to extend
 * Compiles many formats, thanks to "Tilt":http://github.com/rtomayko/tilt.
 * Powered by "EventMachine":http://github.com/eventmachine/eventmachine
-* Short and sweet codebase - core < 100 loc
+* Very brief and concise codebase.
 
 You can "read the annotated source code":http://jbe.github.com/sidekick/sidekick.html.
 
@@ -31,17 +31,11 @@ h2. Basic usage
 
 Install with @gem install sidekick@ and invoke the @sidekick@ command in your project folder. If you do not have a @.sidekick@ file, you will be offered a "template":http://github.com/jbe/sidekick/blob/master/lib/template with plenty of examples.
 
-View source:
-
-* "triggers":http://jbe.github.com/sidekick/triggers.html
-* "helpers":http://github.com/jbe/sidekick/tree/master/lib/sidekick/helpers/
-
 h2. Defining new triggers
 
-Have a look at the "existing triggers":http://jbe.github.com/sidekick/triggers.html, and you will get the idea. Basically, you define new triggers by calling @Sidekick::Triggers.register(:trigger_name) { .. }@, and hooking into "EventMachine":http://github.com/eventmachine/eventmachine
- the same way as in @EM.run { .. }@ from there.
+Have a look at the "existing triggers":http://jbe.github.com/sidekick/triggers.html, and you will get the idea. Basically, you define new triggers by writing methods that hook into "EventMachine":http://github.com/eventmachine/eventmachine the same way as in @EM.run { .. }@.
 
-You can keep your extensions in the @.sidekick@ file itself, or package them in gems, or (better) ask me to merge them into the main repository.
+If you write some useful extensions, please ask me to merge them into the main repository.
 
 h3. Copyright
 

@@ -1,6 +1,6 @@
 
 
-module Sidekick::Helpers::Compile
+module Sidekick::Actions::Compile
 
   # Compiles one template using the `tilt` gem.
 
