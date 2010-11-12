@@ -19,8 +19,8 @@
         <a class="source" href="shell.html">shell.rb</a>
         <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
         <a class="source" href="system.html">system.rb</a>
-        <a class="source" href="user_interaction.html">user_interaction.rb</a>
         <a class="source" href="triggers.html">triggers.rb</a>
+        <a class="source" href="user_interaction.html">user_interaction.rb</a>
         </div>
     </div>
   </div>
@@ -41,10 +41,14 @@
 
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Helpers::SidekickItself</span>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Actions::SidekickItself</span>
 
   <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
     <span class="nb">puts</span> <span class="s1">&#39; -&gt; &#39;</span> <span class="o">+</span> <span class="n">str</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">log_trigger</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+    <span class="nb">puts</span> <span class="n">str</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="o">*</span><span class="n">prms</span><span class="p">)</span>
