@@ -13,6 +13,5 @@ auto_compile 'test/fixtures/*.sass', 'test/output/:name.css'
 
 auto_compile 'test/fixtures/*.coffee', 'test/output/:name.js'
 
-passenger_server 3002
 
 # vim:ft=ruby
