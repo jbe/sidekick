@@ -31,10 +31,7 @@ module Sidekick
     Signal.trap(:INT) { stop }
 
     EventMachine.run do
-      Context.module_eval(
-        open(path) {|f| f.read },
-        path
-        )
+      Context.module_eval(IO.read(path), path)
     end
   end
 
