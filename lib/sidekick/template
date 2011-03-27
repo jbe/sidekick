@@ -1,8 +1,10 @@
 
+
+# DELETE THIS LINE:
+
 stop "File generated. Now please fill it in."
 
-# Now delete the line above, and set up some actions.
-# Here are some samples:
+# Then set up some actions. Here are some samples:
 
 
 # watch('**.rb') do |paths|

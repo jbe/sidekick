@@ -3,7 +3,7 @@ on_start { notify 'started..' }
 
 on_stop { notify 'stopped..' }
 
-after(5) { notify sh 'fortune' }
+every(10) { notify sh 'fortune' }
 
 watch('lib/**.rb') { rake 'docs' }
 

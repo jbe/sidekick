@@ -2,8 +2,6 @@
 #
 # This is the annotated source code. See the [README](http://github.com/jbe/sidekick#readme) too.
 #
-# ***
-#
 # The default trigger definitions and helper methods -- commonly referred to as actions -- are automagically required and included from `lib/sidekick/actions/**.rb`.
 
 require 'fileutils'
@@ -38,10 +36,12 @@ module Sidekick
   def self.ensure_config_exists(path)
     unless File.exists?(path)
       puts "Generate #{path}? (Y/n)"
-      STDIN.gets =~ /^N|n/ ? exit :
-        FileUtils.cp(File.expand_path('../template',
-          __FILE__), path)
+      STDIN.gets =~ /^N|n/ ? exit : FileUtils.cp(template_path, path)
     end
+  end
+
+  def self.template_path
+    File.join File.dirname(__FILE__), *%w{sidekick template}
   end
 
   def self.stop(msg=nil)
