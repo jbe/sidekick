@@ -3,12 +3,12 @@
 module Sidekick::Actions::Triggers
 
 
-  def watch(glob)
+  def watch(*globs)
     needs 'em-dir-watcher', 'to watch file changes'
 
     EMDirWatcher.watch(
       File.expand_path('.'),
-      :include_only => [glob],
+      :include_only => globs,
       :grace_period => 0.2
       ) do |paths|
       log_trigger "watch #{paths.inspect}"
