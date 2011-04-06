@@ -7,9 +7,9 @@ stop "File generated. Now please fill it in."
 # Then set up some actions. Here are some samples:
 
 
-# watch('**.rb') do |paths|
-#   log 'code change'
-#   restart_passenger
+# watch('**.rb') do |paths|   # em-dir-watcher style path globs, which are
+#   log 'code change'         # somewhat similar to .gitignore.
+#   restart_passenger         # see https://github.com/mockko/em-dir-watcher
 #   rake 'docs'
 # end
 
