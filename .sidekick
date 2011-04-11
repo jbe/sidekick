@@ -13,5 +13,7 @@ auto_compile 'test/fixtures/*.sass', 'test/output/:name.css'
 
 auto_compile 'test/fixtures/*.coffee', 'test/output/:name.js'
 
+auto_compress 'test/output/package.js', 'test/output/site.js'
+
 
 # vim:ft=ruby

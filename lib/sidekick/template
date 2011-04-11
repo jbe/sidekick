@@ -22,6 +22,11 @@ stop "File generated. Now please fill it in."
 # auto_compile 'assets/css/*.sass', 'public/css/:name.css'
 # auto_compile 'assets/js/*.coffee', 'public/js/:name.js'
 
+# auto_compress( 'public/package.js',
+#   'public/vendor/jquery.js',
+#   'public/js/*.js'
+#   )
+
 # passenger_server 3002
 
 
