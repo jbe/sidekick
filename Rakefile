@@ -37,11 +37,8 @@ require 'rocco/tasks'
 Rocco::make 'website/'
 
 desc 'Build docco'
-task :docs => [:clear_docs, :rocco]
+task :docs => :rocco
 directory 'website/'
 
-task :clear_docs do
-  sh 'rm website/*.html'
-end
 
 
