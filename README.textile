@@ -25,7 +25,7 @@ h3. Features
 * Powered by "EventMachine":http://github.com/eventmachine/eventmachine
 * Very brief and concise codebase.
 
-You can "read the annotated source code":http://jbe.github.com/sidekick/sidekick.html.
+You can "read the annotated source code":http://jbe.github.com/sidekick/lib/sidekick.html.
 
 h2. Basic usage
 
