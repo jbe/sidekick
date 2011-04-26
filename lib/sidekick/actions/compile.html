@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>compile.rb</title>
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../../sidekick.html">sidekick.rb</a>
+          <a class="source" href="compile.html">compile.rb</a>
+          <a class="source" href="passenger.html">passenger.rb</a>
+          <a class="source" href="rake.html">rake.rb</a>
+          <a class="source" href="shell.html">shell.rb</a>
+          <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
+          <a class="source" href="system.html">system.rb</a>
+          <a class="source" href="triggers.html">triggers.rb</a>
+          <a class="source" href="user_interaction.html">user_interaction.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>compile.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Actions::Compile</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>write a file to disk</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>Compile a template using the <code>tilt</code> gem.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="n">needs</span> <span class="s1">&#39;tilt&#39;</span><span class="p">,</span> <span class="s1">&#39;to compile templates&#39;</span>
+    <span class="n">handling</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">source</span> <span class="k">do</span>
+      <span class="n">write_file</span> <span class="n">target</span><span class="p">,</span> <span class="no">Tilt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">render</span>
+    <span class="k">end</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>compress a file using a suitable compressor for that
+file type.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">compress</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="p">{})</span>
+    <span class="n">handling</span> <span class="no">Exception</span><span class="p">,</span> <span class="n">source</span> <span class="k">do</span>
+      <span class="k">case</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.[^\.]+$/</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span>
+        <span class="k">when</span> <span class="s1">&#39;.js&#39;</span>
+          <span class="n">needs</span> <span class="s1">&#39;uglifier&#39;</span><span class="p">,</span> <span class="s1">&#39;to compress javascript&#39;</span>
+          <span class="n">write_file</span> <span class="n">target</span><span class="p">,</span> <span class="no">Uglifier</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+        <span class="k">else</span> <span class="k">raise</span> <span class="s2">&quot;Does not know how to compress </span><span class="si">#{</span><span class="n">fmt</span><span class="si">}</span><span class="s2"> files.&quot;</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>Concatenate a bunch of files, preserving order</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">concat</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">)</span>
+    <span class="n">write_file</span> <span class="n">target</span><span class="p">,</span> <span class="n">sources</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">p</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>watches for changes matching the <code>source</code> glob, and compiles to
+<code>target</code>, replacing &lsquo;:name&rsquo; in <code>target</code> with the basename of the
+changed file.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">auto_compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="n">watch</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">files</span><span class="o">|</span>
+      <span class="n">files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+        <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="s1">&#39;:name&#39;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;.*&#39;</span><span class="p">))</span>
+            <span class="n">compile</span> <span class="n">file</span><span class="p">,</span> <span class="n">t</span>
+            <span class="n">log</span> <span class="s2">&quot;render </span><span class="si">#{</span><span class="n">file</span><span class="si">}</span><span class="s2"> =&gt; </span><span class="si">#{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>Watch for changes to several source files, concatenating to <code>target_base.concat.type</code>
+and then compressing as per file type.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">auto_compress</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">)</span>
+    <span class="n">fmt</span>      <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">/\.[^\.]+$/</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span>
+    <span class="n">cat_path</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sr">/</span><span class="si">#{</span><span class="n">fmt</span><span class="si">}</span><span class="sr">$/</span><span class="p">,</span> <span class="s1">&#39;.concat&#39;</span> <span class="o">+</span> <span class="n">fmt</span><span class="p">)</span>
+
+    <span class="n">watch</span><span class="p">(</span><span class="o">*</span><span class="n">sources</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">files</span><span class="o">|</span>
+      <span class="n">concat</span><span class="p">(</span><span class="n">cat_path</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">)</span>
+      <span class="n">compress</span><span class="p">(</span><span class="n">cat_path</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+      <span class="n">log</span> <span class="s2">&quot;compress =&gt; </span><span class="si">#{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

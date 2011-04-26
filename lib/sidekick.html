@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
   <title>sidekick.rb</title>
-  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
 </head>
 <body>
 <div id='container'>
@@ -12,16 +12,16 @@
     Jump To &hellip;
     <div id="jump_wrapper">
       <div id="jump_page">
-        <a class="source" href="sidekick.html">sidekick.rb</a>
-        <a class="source" href="compile.html">compile.rb</a>
-        <a class="source" href="passenger.html">passenger.rb</a>
-        <a class="source" href="rake.html">rake.rb</a>
-        <a class="source" href="shell.html">shell.rb</a>
-        <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
-        <a class="source" href="system.html">system.rb</a>
-        <a class="source" href="triggers.html">triggers.rb</a>
-        <a class="source" href="user_interaction.html">user_interaction.rb</a>
-        </div>
+          <a class="source" href="sidekick.html">sidekick.rb</a>
+          <a class="source" href="sidekick/actions/compile.html">compile.rb</a>
+          <a class="source" href="sidekick/actions/passenger.html">passenger.rb</a>
+          <a class="source" href="sidekick/actions/rake.html">rake.rb</a>
+          <a class="source" href="sidekick/actions/shell.html">shell.rb</a>
+          <a class="source" href="sidekick/actions/sidekick_itself.html">sidekick_itself.rb</a>
+          <a class="source" href="sidekick/actions/system.html">system.rb</a>
+          <a class="source" href="sidekick/actions/triggers.html">triggers.rb</a>
+          <a class="source" href="sidekick/actions/user_interaction.html">user_interaction.rb</a>
+      </div>
     </div>
   </div>
   <table cellspacing=0 cellpadding=0>
@@ -34,16 +34,14 @@
   <tbody>
     <tr id='section-1'>
       <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-1">#</a>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
         </div>
-        <p> <em>Sidekick</em> is a simple event driven background assistant. Among other things, you can use it to automatically compile assets, test code, restart servers and so on &ndash; as prescribed per project, in a <code>.sidekick</code> file. It is powered by <a href="http://github.com/eventmachine/eventmachine">EventMachine</a> and <a href="http://github.com/rtomayko/tilt">Tilt</a>.</p>
+        <p><em>Sidekick</em> is a simple event driven background assistant. Among other things, you can use it to automatically compile assets, test code, restart servers and so on &ndash; as prescribed per project, in a <code>.sidekick</code> file. It is powered by <a href="http://github.com/eventmachine/eventmachine">EventMachine</a> and <a href="http://github.com/rtomayko/tilt">Tilt</a>.</p>
 
-<p> This is the annotated source code. See the <a href="http://github.com/jbe/sidekick#readme">README</a> too.</p>
+<p>This is the annotated source code. See the <a href="http://github.com/jbe/sidekick#readme">README</a> too.</p>
 
-<hr />
-
-<p> The default trigger definitions and helper methods &mdash; commonly referred to as actions &mdash; are automagically required and included from <code>lib/sidekick/actions/**.rb</code>.</p>
+<p>The default trigger definitions and helper methods &mdash; commonly referred to as actions &mdash; are automagically required and included from <code>lib/sidekick/actions/**.rb</code>.</p>
 
       </td>
       <td class=code>
@@ -72,20 +70,19 @@
     <span class="no">Signal</span><span class="o">.</span><span class="n">trap</span><span class="p">(</span><span class="ss">:INT</span><span class="p">)</span> <span class="p">{</span> <span class="n">stop</span> <span class="p">}</span>
 
     <span class="no">EventMachine</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span>
-      <span class="no">Context</span><span class="o">.</span><span class="n">module_eval</span><span class="p">(</span>
-        <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span> <span class="p">},</span>
-        <span class="n">path</span>
-        <span class="p">)</span>
+      <span class="no">Context</span><span class="o">.</span><span class="n">module_eval</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">ensure_config_exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
       <span class="nb">puts</span> <span class="s2">&quot;Generate </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">? (Y/n)&quot;</span>
-      <span class="no">STDIN</span><span class="o">.</span><span class="n">gets</span> <span class="o">=~</span> <span class="sr">/^N|n/</span> <span class="p">?</span> <span class="nb">exit</span> <span class="p">:</span>
-        <span class="no">FileUtils</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../template&#39;</span><span class="p">,</span>
-          <span class="bp">__FILE__</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span>
+      <span class="no">STDIN</span><span class="o">.</span><span class="n">gets</span> <span class="o">=~</span> <span class="sr">/^N|n/</span> <span class="p">?</span> <span class="nb">exit</span> <span class="p">:</span> <span class="no">FileUtils</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="n">template_path</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
     <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">template_path</span>
+    <span class="no">File</span><span class="o">.</span><span class="n">join</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">),</span> <span class="o">*</span><span class="sx">%w{sidekick template}</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">stop</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
@@ -97,6 +94,6 @@
 <span class="k">end</span></pre></div>
       </td>
     </tr>
-    </table>
+  </table>
 </div>
 </body>

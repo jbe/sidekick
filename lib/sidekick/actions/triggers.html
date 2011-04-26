@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">
   <title>triggers.rb</title>
-  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
 </head>
 <body>
 <div id='container'>
@@ -12,16 +12,16 @@
     Jump To &hellip;
     <div id="jump_wrapper">
       <div id="jump_page">
-        <a class="source" href="sidekick.html">sidekick.rb</a>
-        <a class="source" href="compile.html">compile.rb</a>
-        <a class="source" href="passenger.html">passenger.rb</a>
-        <a class="source" href="rake.html">rake.rb</a>
-        <a class="source" href="shell.html">shell.rb</a>
-        <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
-        <a class="source" href="system.html">system.rb</a>
-        <a class="source" href="triggers.html">triggers.rb</a>
-        <a class="source" href="user_interaction.html">user_interaction.rb</a>
-        </div>
+          <a class="source" href="../../sidekick.html">sidekick.rb</a>
+          <a class="source" href="compile.html">compile.rb</a>
+          <a class="source" href="passenger.html">passenger.rb</a>
+          <a class="source" href="rake.html">rake.rb</a>
+          <a class="source" href="shell.html">shell.rb</a>
+          <a class="source" href="sidekick_itself.html">sidekick_itself.rb</a>
+          <a class="source" href="system.html">system.rb</a>
+          <a class="source" href="triggers.html">triggers.rb</a>
+          <a class="source" href="user_interaction.html">user_interaction.rb</a>
+      </div>
     </div>
   </div>
   <table cellspacing=0 cellpadding=0>
@@ -34,8 +34,8 @@
   <tbody>
     <tr id='section-1'>
       <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-1">#</a>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
         </div>
         
       </td>
@@ -45,22 +45,22 @@
     </tr>
     <tr id='section-2'>
       <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-2">#</a>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
         </div>
-        <p> Basically, the job of a trigger definition is to take the parameters and the block from a directive in the <code>.sidekick</code> file, and then hook into EventMachine in some way to set up the trigger.</p>
+        <p>Basically, the job of a trigger definition is to take the parameters and the block from a directive in the <code>.sidekick</code> file, and then hook into EventMachine in some way to set up the trigger.</p>
 
       </td>
       <td class=code>
         <div class='highlight'><pre><span class="k">module</span> <span class="nn">Sidekick::Actions::Triggers</span>
 
 
-  <span class="k">def</span> <span class="nf">watch</span><span class="p">(</span><span class="n">glob</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">watch</span><span class="p">(</span><span class="o">*</span><span class="n">globs</span><span class="p">)</span>
     <span class="n">needs</span> <span class="s1">&#39;em-dir-watcher&#39;</span><span class="p">,</span> <span class="s1">&#39;to watch file changes&#39;</span>
 
     <span class="no">EMDirWatcher</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span>
       <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
-      <span class="ss">:include_only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">glob</span><span class="o">]</span><span class="p">,</span>
+      <span class="ss">:include_only</span> <span class="o">=&gt;</span> <span class="n">globs</span><span class="p">,</span>
       <span class="ss">:grace_period</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span>
       <span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">paths</span><span class="o">|</span>
       <span class="n">log_trigger</span> <span class="s2">&quot;watch </span><span class="si">#{</span><span class="n">paths</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -93,6 +93,6 @@
 <span class="k">end</span></pre></div>
       </td>
     </tr>
-    </table>
+  </table>
 </div>
 </body>
