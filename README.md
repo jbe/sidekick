@@ -16,7 +16,7 @@ Use Sidekick to automatically restart dev servers, run builds, auto-compile Sass
 * Simple and powerful DSL
 * Easy to extend
 * Notifications using Growl or libnotify
-* Compiles many formats, thanks to [Tilt]:(http://github.com/rtomayko/tilt).
+* Compiles many formats, thanks to [Tilt](http://github.com/rtomayko/tilt).
 * Powered by [EventMachine](http://github.com/eventmachine/eventmachine) and [em-dir-watcher](https://github.com/jarmo/em-dir-watcher) (= Mac, Linux and Windows support)
 * Brief and concise codebase.
 
