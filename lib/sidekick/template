@@ -1,11 +1,10 @@
 
 
 # DELETE THIS LINE:
+stop "edit #{__FILE__} to add actions"
 
-stop "File generated. Now please fill it in."
 
-# Then set up some actions. Here are some samples:
-
+# SAMPLES:
 
 # watch('**.rb') do |paths|   # em-dir-watcher style path globs, which are
 #   log 'code change'         # somewhat similar to .gitignore.
@@ -28,7 +27,6 @@ stop "File generated. Now please fill it in."
 #   )
 
 # passenger_server 3002
-
 
 
 # def report_location
