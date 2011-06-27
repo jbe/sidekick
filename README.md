@@ -6,27 +6,18 @@ Sidekick
 ```ruby
 
   watch('**/*.rb') { restart_passenger; rake 'docs' }
-
   auto_compile 'assets/*.sass', 'public/:name.css'
-
   every(10) { notify sh 'fortune' }
 
 ```
 
-### Sample use cases
-
-* Restart server when code changes
-* Auto-compile Sass or CoffeeScript templates (and many other languages)
-* Periodically run tasks
-* Continuous testing, notifications, hooks, you name it, the world is yours to conquer!
-
-### Features
+Use Sidekick to automatically restart dev servers, run builds, auto-compile Sass, CoffeeScript and others, continously test, periodically run tasks, or anything else; the world is yours to conquer.
 
 * Simple and powerful DSL
 * Easy to extend
 * Notifications using Growl or libnotify
 * Compiles many formats, thanks to [Tilt]:(http://github.com/rtomayko/tilt).
-* Powered by [EventMachine](http://github.com/eventmachine/eventmachine)
+* Powered by [EventMachine](http://github.com/eventmachine/eventmachine) and [em-dir-watcher](https://github.com/jarmo/em-dir-watcher) (= Mac, Linux and Windows support)
 * Brief and concise codebase.
 
 ### Basic usage
@@ -35,9 +26,7 @@ Install with `gem install sidekick` and invoke the `sidekick` command in your pr
 
 ### Defining new triggers
 
-Have a look at the [existing triggers](https://github.com/jbe/sidekick/blob/master/lib/sidekick/actions/triggers.rb), and you will get the idea. Basically, you define new triggers by writing methods that hook into [EventMachine](http://github.com/eventmachine/eventmachine) the same way as in `EM.run { .. }`.
-
-If you write some useful extensions, ask me to merge them into the main repository!
+Have a look at the [existing triggers](https://github.com/jbe/sidekick/blob/master/lib/sidekick/actions/triggers.rb), and you will get the idea. Basically, you define new triggers by writing methods that hook into [EventMachine](http://github.com/eventmachine/eventmachine) the same way as in `EM.run { .. }`. If you write some useful extensions, ask me to merge them into the main repository!
 
 ---
 
